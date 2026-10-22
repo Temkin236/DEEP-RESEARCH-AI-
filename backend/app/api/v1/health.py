@@ -11,7 +11,7 @@ router = APIRouter(prefix="/health", tags=["Health"])
 
 START_TIME = datetime.datetime.now(datetime.timezone.utc)
 
-@router.get("")
+@router.api_route("", methods=["GET", "HEAD"])
 def get_health(db: Session = Depends(get_db)):
     """Health check endpoint verifying DB, Vectorstore, and provider status."""
     db_status = "healthy"

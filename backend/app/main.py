@@ -59,7 +59,7 @@ async def global_exception_handler(request: Request, exc: Exception):
 # Mount API v1 router under /api
 app.include_router(api_v1_router, prefix="/api")
 
-@app.get("/")
+@app.api_route("/", methods=["GET", "HEAD"])
 def root():
     return {
         "name": "Deep Research AI API",
