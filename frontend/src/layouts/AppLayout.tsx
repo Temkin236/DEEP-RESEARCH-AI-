@@ -7,9 +7,9 @@ export const AppLayout: React.FC = () => {
   return (
     <div className="min-h-screen bg-[#FAF7F2] flex flex-col font-sans">
       <Navbar />
-      <div className="flex-1 flex max-w-7xl w-full mx-auto">
+      <div className="flex-1 flex items-start max-w-7xl w-full mx-auto">
         <Sidebar />
-        <main className="flex-1 p-6 md:p-8 overflow-y-auto">
+        <main className="flex-1 min-w-0 p-6 md:p-8">
           <Outlet />
         </main>
       </div>

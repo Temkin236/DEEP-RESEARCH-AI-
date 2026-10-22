@@ -21,7 +21,7 @@ export const Sidebar: React.FC = () => {
   ];
 
   return (
-    <aside className="w-64 bg-[#F3EADF]/60 border-r border-[#E5D8C8] flex flex-col justify-between p-4 min-h-[calc(100vh-4rem)]">
+    <aside className="w-64 shrink-0 bg-[#F3EADF]/60 border-r border-[#E5D8C8] flex flex-col justify-between p-4 sticky top-16 h-[calc(100vh-4rem)] overflow-y-auto z-20">
       <div className="space-y-6">
         <div>
           <span className="text-[11px] font-semibold tracking-wider text-[#75685D] uppercase px-3">
