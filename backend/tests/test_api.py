@@ -54,3 +54,18 @@ def test_document_upload_and_validation():
     # Delete document
     del_res = client.delete(f"/api/v1/documents/{doc_id}")
     assert del_res.status_code == 204
+
+def test_research_chat_endpoint():
+    chat_payload = {
+        "message": "Explain Rust vs Go async concurrency models",
+        "use_web_search": False,
+        "focus": "technical"
+    }
+    chat_res = client.post("/api/v1/research/chat", json=chat_payload)
+    assert chat_res.status_code == 200
+    data = chat_res.json()
+    assert "answer" in data
+    assert len(data["answer"]) > 10
+    assert "suggested_followups" in data
+    assert len(data["suggested_followups"]) > 0
+

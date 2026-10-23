@@ -8,7 +8,7 @@ def test_root_endpoint():
     response = client.get("/")
     assert response.status_code == 200
     data = response.json()
-    assert data["name"] == "Deep Research AI API"
+    assert data["name"] == "TechResearch Agent API"
     assert "health" in data
 
 def test_health_check():
