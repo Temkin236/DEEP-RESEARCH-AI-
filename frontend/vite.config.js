@@ -17,6 +17,17 @@ export default defineConfig({
             '/api': {
                 target: process.env.VITE_API_URL || 'http://localhost:8000',
                 changeOrigin: true,
+                configure: function (proxy) {
+                    proxy.on('error', function (_err, _req, res) {
+                        if (!res.headersSent && 'writeHead' in res) {
+                            res.writeHead(503, { 'Content-Type': 'application/json' });
+                            res.end(JSON.stringify({
+                                error: 'BackendUnavailable',
+                                message: 'Backend service is not running on http://localhost:8000. Start it with: cd backend && .venv/bin/uvicorn app.main:app --reload',
+                            }));
+                        }
+                    });
+                },
             },
             '/docs': {
                 target: process.env.VITE_API_URL || 'http://localhost:8000',

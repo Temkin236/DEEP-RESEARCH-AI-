@@ -4,32 +4,40 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
-  darkMode: 'class',
   theme: {
     extend: {
       colors: {
-        theme: {
-          'bg-main': '#FAF7F2',       // Warm ivory
-          'bg-secondary': '#F3EADF',  // Light cream
-          'primary': '#B89576',       // Light warm brown
-          'primary-hover': '#9B785B', // Medium brown
-          'surface-soft': '#E8D8C5',  // Soft brown surface
-          'border-beige': '#E5D8C8',  // Light border beige
-          'text-main': '#332B25',     // Deep warm charcoal
-          'text-secondary': '#75685D',// Muted brown-gray
-          'card-surface': '#FFFEFC',  // White card surface
-          'success': '#52785C',       // Muted forest green
-          'warning': '#B77932',       // Warm amber
-          'error': '#B6534B',         // Muted red
+        warm: {
+          50: '#FAF7F4',   // Clean warm canvas
+          100: '#F5EFE9',  // Soft warm surface
+          150: '#EFE7DF',  // Hover surface
+          200: '#E6DCD2',  // Hairline border
+          300: '#D5C4B4',  // Active border
+          400: '#B8997E',  // Muted light brown
+          500: '#9B785B',  // Caramel brown
+          600: '#855E40',  // Rich warm light brown (primary button)
+          700: '#6E4B31',  // Deep warm brown (hover)
+          800: '#4E3420',  // Dark espresso
+          900: '#26190E',  // Deepest brown
+          dark: '#1F1A15', // Near-black charcoal text
+          muted: '#6F6357',// Secondary label text
+          subtle: '#9A8C7F',// Tertiary text
         },
       },
       fontFamily: {
-        sans: ['Inter', 'Manrope', 'system-ui', 'sans-serif'],
+        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        display: ['Manrope', 'Inter', 'sans-serif'],
+        mono: ['"JetBrains Mono"', 'monospace'],
       },
       boxShadow: {
-        'warm-sm': '0 1px 3px 0 rgba(51, 43, 37, 0.05)',
-        'warm-md': '0 4px 12px 0 rgba(51, 43, 37, 0.07)',
-        'warm-lg': '0 10px 25px -5px rgba(51, 43, 37, 0.1)',
+        'warm-xs': '0 1px 2px 0 rgba(31, 26, 21, 0.04)',
+        'warm-sm': '0 1px 3px 0 rgba(31, 26, 21, 0.05), 0 2px 8px -2px rgba(31, 26, 21, 0.03)',
+        'warm-md': '0 4px 16px -2px rgba(31, 26, 21, 0.06), 0 2px 4px -1px rgba(31, 26, 21, 0.03)',
+        'warm-lg': '0 12px 32px -4px rgba(31, 26, 21, 0.08), 0 4px 12px -2px rgba(31, 26, 21, 0.04)',
+        'warm-focus': '0 0 0 3px rgba(133, 94, 64, 0.18)',
+      },
+      animation: {
+        'pulse-subtle': 'pulse 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
       },
     },
   },
