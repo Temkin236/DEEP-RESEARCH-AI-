@@ -1,0 +1,61 @@
+# Render Infrastructure Blueprint for Deep Research AI
+services:
+  # 1. FastAPI Multi-Agent Swarm Backend
+  - type: web
+    name: deep-research-backend
+    runtime: python
+    rootDir: backend
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "python -c 'from app.database.session import init_db; init_db()' && uvicorn app.main:app --host 0.0.0.0 --port $PORT"
+    plan: standard
+    region: oregon
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: deep-research-postgres
+          property: connectionString
+      - key: CHROMA_PERSIST_DIRECTORY
+        value: /var/data/chroma_db
+      - key: UPLOAD_DIRECTORY
+        value: /var/data/uploads
+      - key: LLM_PROVIDER
+        value: gemini
+      - key: SEARCH_PROVIDER
+        value: duckduckgo
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+    disk:
+      name: deep-research-storage
+      mountPath: /var/data
+      sizeGB: 10
+    healthCheckPath: /api/v1/health
+
+  # 2. React + Vite Frontend Web App
+  - type: web
+    name: deep-research-frontend
+    runtime: static
+    rootDir: frontend
+    buildCommand: "npm install && npm run build"
+    staticPublishPath: dist
+    pullRequestPreviewsEnabled: true
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: deep-research-backend
+          property: host
+
+databases:
+  - name: deep-research-postgres
+    plan: free
+    region: oregon
+    databaseName: deep_research
+    user: deep_research_user
