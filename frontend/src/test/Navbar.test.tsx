@@ -11,10 +11,10 @@ describe('Navbar Component', () => {
       </BrowserRouter>
     );
 
-    expect(screen.getByText(/Deep Research/i)).toBeInTheDocument();
+    expect(screen.getByText(/TechResearch/i)).toBeInTheDocument();
     expect(screen.getByText(/Dashboard/i)).toBeInTheDocument();
-    expect(screen.getByText(/History/i)).toBeInTheDocument();
-    expect(screen.getByText(/Documents/i)).toBeInTheDocument();
-    expect(screen.getByText(/New Research/i)).toBeInTheDocument();
+    expect(screen.getByText(/Terminal Chat/i)).toBeInTheDocument();
+    expect(screen.getByText(/Neural History/i)).toBeInTheDocument();
+    expect(screen.getByText(/Launch Research/i)).toBeInTheDocument();
   });
 });

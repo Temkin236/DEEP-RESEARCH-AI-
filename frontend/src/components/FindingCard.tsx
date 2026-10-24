@@ -8,33 +8,33 @@ interface FindingCardProps {
 
 export const FindingCard: React.FC<FindingCardProps> = ({ finding }) => {
   return (
-    <div className="card-warm p-4 space-y-2.5">
-      <div className="flex items-center justify-between gap-2">
-        <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-0.5 rounded-md bg-[#F3EADF] text-[#332B25] border border-[#E5D8C8]">
-          <Layers className="w-3.5 h-3.5 text-[#9B785B]" />
+    <div className="card-clean p-4 space-y-2.5 border-[#E8E1D7] bg-white hover:border-[#D6C8B8] transition-colors">
+      <div className="flex items-center justify-between gap-2 flex-wrap">
+        <span className="inline-flex items-center gap-1.5 text-xs font-mono font-medium px-2.5 py-1 rounded-md bg-[#F6F1EB] text-[#785135] border border-[#E8E1D7]">
+          <Layers className="w-3.5 h-3.5 text-[#785135]" />
           <span>{finding.subquestion}</span>
         </span>
-        <div className="flex items-center gap-1 text-xs">
+        <div className="flex items-center gap-1 text-xs font-mono">
           {finding.is_disputed ? (
-            <span className="flex items-center gap-1 text-[#B77932] font-semibold bg-[#F3EADF] px-2 py-0.5 rounded-full">
-              <AlertTriangle className="w-3.5 h-3.5" />
-              <span>Divergence / Disputed</span>
+            <span className="flex items-center gap-1 text-[#8C5212] font-semibold bg-[#FEF5EA] border border-[#F3DFC1] px-2 py-0.5 rounded-full">
+              <AlertTriangle className="w-3.5 h-3.5 text-[#B3681E]" />
+              <span>Contested Claim</span>
             </span>
           ) : (
-            <span className="flex items-center gap-1 text-[#52785C] font-semibold bg-[#FAF7F2] px-2 py-0.5 rounded-full border border-[#E5D8C8]">
-              <CheckCircle2 className="w-3.5 h-3.5" />
-              <span>Confidence {Math.round(finding.confidence * 100)}%</span>
+            <span className="flex items-center gap-1 text-[#2E6B4E] font-semibold bg-[#EAF3ED] border border-[#C5DEC8] px-2.5 py-0.5 rounded-full">
+              <CheckCircle2 className="w-3.5 h-3.5 text-[#2E6B4E]" />
+              <span>Confidence: {Math.round(finding.confidence * 100)}%</span>
             </span>
           )}
         </div>
       </div>
 
-      <p className="text-sm font-medium text-[#332B25] leading-relaxed">
+      <p className="text-sm font-medium text-[#1A1612] leading-relaxed">
         {finding.claim}
       </p>
 
       {finding.evidence_excerpt && (
-        <div className="bg-[#FAF7F2] p-2.5 rounded-lg border-l-2 border-[#B89576] text-xs text-[#75685D] italic">
+        <div className="bg-[#FAF8F5] p-3 rounded-lg border-l-2 border-[#785135] text-xs text-[#42382F] italic font-mono leading-relaxed">
           "{finding.evidence_excerpt}"
         </div>
       )}

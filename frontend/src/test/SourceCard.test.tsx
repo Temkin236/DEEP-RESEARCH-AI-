@@ -24,6 +24,6 @@ describe('SourceCard Component', () => {
     expect(screen.getByText('Benchmarking Multi-Agent Systems in Production')).toBeInTheDocument();
     expect(screen.getByText('research.example.org')).toBeInTheDocument();
     expect(screen.getByText(/Empirical analysis shows that explicit state management/i)).toBeInTheDocument();
-    expect(screen.getByText(/Verified \(95%\)/i)).toBeInTheDocument();
+    expect(screen.getByText(/Reliability:\s*95%/i)).toBeInTheDocument();
   });
 });

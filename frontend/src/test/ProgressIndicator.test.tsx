@@ -15,8 +15,8 @@ describe('ProgressIndicator Component', () => {
     expect(screen.getByText('65%')).toBeInTheDocument();
     expect(screen.getByText(/Analyzing Evidence/i)).toBeInTheDocument();
     expect(screen.getByText('Planning')).toBeInTheDocument();
-    expect(screen.getByText('Researching')).toBeInTheDocument();
-    expect(screen.getByText('Analyzing')).toBeInTheDocument();
-    expect(screen.getByText('Reporting')).toBeInTheDocument();
+    expect(screen.getByText('Retrieval')).toBeInTheDocument();
+    expect(screen.getByText('Analysis')).toBeInTheDocument();
+    expect(screen.getByText('Report')).toBeInTheDocument();
   });
 });

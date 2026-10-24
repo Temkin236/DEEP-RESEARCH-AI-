@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { UploadCloud, FileText, CheckCircle, AlertCircle, X, Loader2 } from 'lucide-react';
+import { UploadCloud, FileCode2, AlertCircle, X, Loader2, Database } from 'lucide-react';
 import { api } from '../services/api';
 import { DocumentUploadResponse } from '../types';
 
@@ -51,16 +51,21 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#332B25]/40 backdrop-blur-sm p-4">
-      <div className="card-warm w-full max-w-lg p-6 space-y-5 shadow-warm-lg">
-        <div className="flex items-center justify-between border-b border-[#E5D8C8] pb-3">
-          <div className="flex items-center gap-2">
-            <UploadCloud className="w-5 h-5 text-[#B89576]" />
-            <h3 className="font-bold text-base text-[#332B25]">Upload Research Document</h3>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#1A1612]/40 backdrop-blur-sm p-4">
+      <div className="card-clean w-full max-w-lg p-6 space-y-5 shadow-warm-lg border border-[#E8E1D7] bg-white rounded-2xl">
+        <div className="flex items-center justify-between border-b border-[#E8E1D7] pb-3">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg bg-[#F4EBE1] border border-[#E0D5C7] flex items-center justify-center text-[#785135]">
+              <Database className="w-4 h-4" />
+            </div>
+            <div>
+              <h3 className="font-bold text-base text-[#1A1612]">Ingest Vector Document</h3>
+              <p className="text-[11px] text-[#6E6255] font-mono">ChromaDB Embeddings Pipeline</p>
+            </div>
           </div>
           <button
             onClick={onClose}
-            className="text-[#75685D] hover:text-[#332B25] p-1 rounded-lg hover:bg-[#F3EADF]"
+            className="text-[#6E6255] hover:text-[#1A1612] p-1 rounded-lg hover:bg-[#F4EBE1] transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -70,16 +75,18 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
         <div
           onDragOver={(e) => e.preventDefault()}
           onDrop={handleDrop}
-          className="border-2 border-dashed border-[#E5D8C8] hover:border-[#B89576] transition-colors rounded-xl p-8 text-center bg-[#FAF7F2] space-y-3 cursor-pointer"
+          className="border-2 border-dashed border-[#E8E1D7] hover:border-[#785135] transition-all rounded-xl p-8 text-center bg-[#FAF8F5] space-y-3 cursor-pointer group"
           onClick={() => document.getElementById('file-input')?.click()}
         >
-          <UploadCloud className="w-10 h-10 mx-auto text-[#B89576]" />
+          <div className="w-12 h-12 rounded-xl bg-[#F4EBE1] border border-[#E0D5C7] flex items-center justify-center mx-auto text-[#785135] group-hover:scale-105 transition-all shadow-warm-xs">
+            <UploadCloud className="w-6 h-6" />
+          </div>
           <div>
-            <p className="text-sm font-semibold text-[#332B25]">
-              Click to browse or drag and drop your file here
+            <p className="text-sm font-semibold text-[#1A1612]">
+              Select or drag technical document into vector pipeline
             </p>
-            <p className="text-xs text-[#75685D] mt-1">
-              Supported formats: PDF, DOCX, Markdown (.md), Plain Text (.txt) up to 25MB
+            <p className="text-xs text-[#6E6255] mt-1 font-mono">
+              Supported: .pdf, .docx, .md, .txt (Max 25MB)
             </p>
           </div>
           <input
@@ -92,13 +99,13 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
         </div>
 
         {file && (
-          <div className="flex items-center justify-between p-3 bg-[#F3EADF] rounded-lg border border-[#E5D8C8]">
-            <div className="flex items-center gap-2 overflow-hidden">
-              <FileText className="w-4 h-4 text-[#9B785B] shrink-0" />
-              <span className="text-xs font-medium text-[#332B25] truncate">
+          <div className="flex items-center justify-between p-3 bg-[#F4EBE1] rounded-lg border border-[#E8E1D7] font-mono">
+            <div className="flex items-center gap-2.5 overflow-hidden">
+              <FileCode2 className="w-4 h-4 text-[#785135] shrink-0" />
+              <span className="text-xs font-medium text-[#1A1612] truncate">
                 {file.name}
               </span>
-              <span className="text-[11px] text-[#75685D] shrink-0">
+              <span className="text-[11px] text-[#6E6255] shrink-0">
                 ({(file.size / 1024 / 1024).toFixed(2)} MB)
               </span>
             </div>
@@ -107,7 +114,7 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
                 e.stopPropagation();
                 setFile(null);
               }}
-              className="text-[#75685D] hover:text-[#B6534B]"
+              className="text-[#6E6255] hover:text-[#A63D38] p-1"
             >
               <X className="w-4 h-4" />
             </button>
@@ -115,13 +122,13 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
         )}
 
         {error && (
-          <div className="flex items-center gap-2 p-3 bg-[#B6534B]/10 border border-[#B6534B]/30 rounded-lg text-xs text-[#B6534B]">
-            <AlertCircle className="w-4 h-4 shrink-0" />
+          <div className="flex items-center gap-2 p-3 bg-[#FDF2F2] border border-[#F7D7D6] rounded-lg text-xs text-[#A63D38]">
+            <AlertCircle className="w-4 h-4 shrink-0 text-[#A63D38]" />
             <span>{error}</span>
           </div>
         )}
 
-        <div className="flex justify-end gap-3 pt-2">
+        <div className="flex justify-end gap-3 pt-2 border-t border-[#E8E1D7]">
           <button
             type="button"
             onClick={onClose}
@@ -139,10 +146,10 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
             {isUploading ? (
               <>
                 <Loader2 className="w-4 h-4 animate-spin" />
-                <span>Processing & Indexing...</span>
+                <span>Chunking & Vectorizing...</span>
               </>
             ) : (
-              <span>Upload & Index</span>
+              <span>Start Ingestion</span>
             )}
           </button>
         </div>
