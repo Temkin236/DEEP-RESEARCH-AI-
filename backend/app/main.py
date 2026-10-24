@@ -12,22 +12,22 @@ logging.basicConfig(
     level=getattr(logging, settings.LOG_LEVEL.upper(), logging.INFO),
     format="%(asctime)s [%(levelname)s] %(name)s: %(message)s"
 )
-logger = logging.getLogger("deep_research_ai")
+logger = logging.getLogger("tech_research_ai")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Startup sequence
-    logger.info("Initializing Deep Research AI application...")
+    logger.info("Initializing TechResearch Agent application...")
     init_db()
     logger.info(f"LLM Provider: {settings.LLM_PROVIDER}")
     logger.info(f"Search Provider: {settings.SEARCH_PROVIDER}")
     yield
     # Shutdown sequence
-    logger.info("Shutting down Deep Research AI application...")
+    logger.info("Shutting down TechResearch Agent application...")
 
 app = FastAPI(
-    title="Deep Research AI API",
-    description="Autonomous Multi-Agent Research Assistant powered by LangGraph, FastAPI, and ChromaDB.",
+    title="TechResearch Agent API",
+    description="Autonomous Multi-Agent Research Assistant: A team of agents writes you a report (Planner, Researcher, Writer) powered by LangGraph, FastAPI, and ChromaDB.",
     version="1.0.0",
     lifespan=lifespan,
     docs_url="/docs",
@@ -62,7 +62,8 @@ app.include_router(api_v1_router, prefix="/api")
 @app.api_route("/", methods=["GET", "HEAD"])
 def root():
     return {
-        "name": "Deep Research AI API",
+        "name": "TechResearch Agent API",
+        "tagline": "A team of agents writes you a report",
         "version": "1.0.0",
         "docs": "/docs",
         "health": "/api/v1/health"

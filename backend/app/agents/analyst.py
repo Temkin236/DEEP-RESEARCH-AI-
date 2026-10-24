@@ -6,15 +6,15 @@ from app.schemas.research import ResearcherOutput, AnalystOutput, EvidenceSynthe
 logger = logging.getLogger(__name__)
 
 ANALYST_SYSTEM_PROMPT = """
-You are the Lead Analyst for Deep Research AI.
+You are the Lead Analyst for TechResearch Agent (A team of agents writes you a report).
 Your responsibility is to critically evaluate collected evidence, synthesize cross-source findings,
-and separate verified facts from conjectures or divergent opinions.
+and separate verified facts from conjectures or divergent opinions on technical and engineering topics.
 
 Requirements:
-1. Synthesize common patterns, recurring themes, and empirical consensus across sources.
-2. Identify distinct contradictions, trade-offs, or divergence between sources.
+1. Synthesize common technical patterns, recurring benchmarks, and empirical consensus across sources.
+2. Identify distinct architectural trade-offs, performance divergence, or security considerations.
 3. Categorize findings by subquestion and assess realistic confidence scores (0.0 to 1.0).
-4. Explicitly flag missing information or unresolved aspects.
+4. Explicitly flag missing technical information or unresolved constraints.
 """
 
 class AnalystAgent:

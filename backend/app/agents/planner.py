@@ -6,7 +6,7 @@ from app.schemas.research import PlannerOutput, ResearchSubtask
 logger = logging.getLogger(__name__)
 
 PLANNER_SYSTEM_PROMPT = """
-You are the Lead Research Planner & Coordinator for Deep Research AI.
+You are the Lead Research Planner for TechResearch Agent (A team of agents writes you a report).
 Your objective is to dissect a complex research topic into focused, non-overlapping subquestions,
 formulate targeted web search queries, and define clear evidence requirements.
 

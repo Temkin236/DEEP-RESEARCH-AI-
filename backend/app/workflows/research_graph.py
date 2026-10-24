@@ -52,9 +52,9 @@ def plan_node(state: ResearchWorkflowState) -> Dict[str, Any]:
         )
         subtask_count = len(plan_output.subtasks)
         new_event = {
-            "agent_name": "Research Planner",
+            "agent_name": "Planner",
             "stage": "Planning",
-            "message": f"Formulated {subtask_count} research subquestions with targeted search queries.",
+            "message": f"Planner: Breaking topic into {subtask_count} questions with targeted search queries.",
             "event_type": "progress",
             "payload_json": {"subtasks": [s.subquestion for s in plan_output.subtasks]}
         }
@@ -85,9 +85,9 @@ def research_node(state: ResearchWorkflowState) -> Dict[str, Any]:
         ])
 
         new_event = {
-            "agent_name": "Researcher Agent",
+            "agent_name": "Researcher",
             "stage": "Research Gathering",
-            "message": f"Collected {len(registered)} distinct verified evidence sources.",
+            "message": f"Researcher: Searching docs and the web; collected {len(registered)} verified evidence sources.",
             "event_type": "source",
             "payload_json": {"source_count": len(registered), "sources": [s["title"] for s in registered]}
         }
@@ -225,9 +225,9 @@ def report_node(state: ResearchWorkflowState) -> Dict[str, Any]:
 
         word_count = len(report_out.markdown_content.split())
         new_event = {
-            "agent_name": "Report Writer",
+            "agent_name": "Writer",
             "stage": "Completed",
-            "message": f"Generated structured research report ({word_count} words) with grounded citations.",
+            "message": f"Writer: Writing the report complete ({word_count} words) with grounded citations.",
             "event_type": "completion",
             "payload_json": {"title": report_out.title, "word_count": word_count}
         }

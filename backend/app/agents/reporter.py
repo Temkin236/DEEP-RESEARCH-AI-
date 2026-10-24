@@ -13,8 +13,8 @@ from app.schemas.research import (
 logger = logging.getLogger(__name__)
 
 REPORTER_SYSTEM_PROMPT = """
-You are the Executive Report Writer for Deep Research AI.
-Your task is to synthesize verified research findings into an elegant, authoritative, publication-quality report.
+You are the Lead Report Writer for TechResearch Agent (A team of agents writes you a report).
+Your task is to synthesize verified research findings into an elegant, authoritative, publication-quality technical report.
 
 Structural Standards:
 1. Executive Summary: High-level synthesis of primary discoveries and implications.

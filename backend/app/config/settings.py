@@ -31,7 +31,9 @@ class Settings(BaseSettings):
     SERPER_API_KEY: str = Field(default="")
 
     # Database
-    DATABASE_URL: str = Field(default="sqlite:///./deep_research.db")
+    DATABASE_URL: str = Field(default="sqlite:///./tech_research.db")
+    SUPABASE_URL: str = Field(default="")
+    SUPABASE_KEY: str = Field(default="")
 
     # Chroma persistence directory
     CHROMA_PERSIST_DIRECTORY: str = Field(default="./chroma_db")
