@@ -9,7 +9,8 @@ import {
   ResearchChatResponse,
 } from '../types';
 
-const API_BASE = import.meta.env.VITE_API_URL || '';
+const rawBase = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL || '';
+const API_BASE = rawBase.replace(/\/+$/, '');
 
 class ApiClient {
   private async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
