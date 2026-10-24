@@ -5,6 +5,8 @@ import {
   Report,
   DocumentItem,
   DocumentUploadResponse,
+  ResearchChatRequest,
+  ResearchChatResponse,
 } from '../types';
 
 const API_BASE = import.meta.env.VITE_API_URL || '';
@@ -20,7 +22,14 @@ class ApiClient {
       headers['Content-Type'] = 'application/json';
     }
 
-    const res = await fetch(url, { ...options, headers });
+    let res: Response;
+    try {
+      res = await fetch(url, { ...options, headers });
+    } catch (err: any) {
+      throw new Error(
+        'Unable to connect to TechResearch Agent backend. Please ensure the backend is running on http://localhost:8000 (run `make dev` or `make dev-backend`).'
+      );
+    }
 
     if (!res.ok) {
       let errorMsg = `HTTP Error ${res.status}`;
@@ -29,6 +38,9 @@ class ApiClient {
         errorMsg = errorJson.detail || errorJson.message || errorMsg;
       } catch {
         // use fallback status
+      }
+      if (res.status === 503 || res.status === 502) {
+        errorMsg = `TechResearch backend service unavailable: ${errorMsg}`;
       }
       throw new Error(errorMsg);
     }
@@ -41,7 +53,16 @@ class ApiClient {
   }
 
   // Health
-  async getHealth(): Promise<{ status: string; database: string; uptime_seconds: number; version: string }> {
+  async getHealth(): Promise<{
+    status: string;
+    environment: string;
+    database: string;
+    vectorstore: string;
+    llm_provider: string;
+    search_provider: string;
+    uptime_seconds: number;
+    version: string;
+  }> {
     return this.request('/v1/health');
   }
 
@@ -102,6 +123,14 @@ class ApiClient {
   async deleteDocument(id: string): Promise<void> {
     return this.request(`/v1/documents/${id}`, {
       method: 'DELETE',
+    });
+  }
+
+  // Interactive Research Chat
+  async chatWithAgent(payload: ResearchChatRequest): Promise<ResearchChatResponse> {
+    return this.request('/v1/research/chat', {
+      method: 'POST',
+      body: JSON.stringify(payload),
     });
   }
 }

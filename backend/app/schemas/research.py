@@ -161,3 +161,31 @@ class ReportWriterOutput(BaseModel):
     limitations: str
     conclusion: str
     markdown_content: str
+
+# Interactive Research Chat Schemas
+class ChatMessage(BaseModel):
+    role: str
+    content: str
+
+class ChatSource(BaseModel):
+    title: str
+    url: str
+    domain: Optional[str] = None
+    snippet: Optional[str] = None
+    authors: Optional[str] = None
+    journal: Optional[str] = None
+    published_date: Optional[str] = None
+    identifier: Optional[str] = None
+
+class ResearchChatRequest(BaseModel):
+    message: str = Field(..., min_length=1, max_length=2000, description="User research question")
+    job_id: Optional[str] = Field(None, description="Optional linked research job ID")
+    history: Optional[List[ChatMessage]] = Field(default_factory=list)
+    use_web_search: bool = Field(default=True, description="Whether to query live web search engines")
+    focus: str = Field(default="technical", description="Focus domain for search")
+
+class ResearchChatResponse(BaseModel):
+    answer: str
+    sources: List[ChatSource] = []
+    suggested_followups: List[str] = []
+    job_id: Optional[str] = None

@@ -14,7 +14,10 @@ from app.schemas.research import (
     ResearchJobSummaryResponse,
     ResearchJobDetailResponse,
     ReportResponse,
+    ResearchChatRequest,
+    ResearchChatResponse,
 )
+from app.services.chat_service import ChatService
 from app.workers.task_runner import (
     execute_research_workflow,
     subscribe_events,
@@ -239,3 +242,10 @@ def delete_research_job(job_id: str, db: Session = Depends(get_db)):
     db.delete(job)
     db.commit()
     return None
+
+@router.post("/chat", response_model=ResearchChatResponse)
+def research_chat(request: ResearchChatRequest, db: Session = Depends(get_db)):
+    """Interactive research chat agent with live web & document search grounding."""
+    chat_svc = ChatService()
+    return chat_svc.process_chat(request, db=db)
+

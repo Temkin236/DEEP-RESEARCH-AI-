@@ -110,3 +110,51 @@ export interface DocumentUploadResponse {
   message: string;
   extracted_chunks: number;
 }
+
+export interface ChatMessage {
+  id: string;
+  role: 'user' | 'assistant';
+  content: string;
+  timestamp: string;
+  sources?: ChatSource[];
+  suggested_followups?: string[];
+}
+
+export interface ChatSource {
+  title: string;
+  url: string;
+  domain?: string;
+  snippet?: string;
+  authors?: string;
+  journal?: string;
+  published_date?: string;
+  identifier?: string;
+}
+
+export interface ResearchSession {
+  id: string;
+  question: string;
+  createdAt: string;
+  result: {
+    success: boolean;
+    count: number;
+    question: string;
+    answer: string;
+    articles: ChatSource[];
+  };
+}
+
+export interface ResearchChatRequest {
+  message: string;
+  job_id?: string;
+  history?: Array<{ role: string; content: string }>;
+  use_web_search?: boolean;
+  focus?: string;
+}
+
+export interface ResearchChatResponse {
+  answer: string;
+  sources: ChatSource[];
+  suggested_followups: string[];
+  job_id?: string | null;
+}
