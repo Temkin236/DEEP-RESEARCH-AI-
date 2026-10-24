@@ -1,6 +1,8 @@
 # Tech Research AI — Autonomous Multi-Agent Research Platform
 
 [![CI Pipeline](https://github.com/Temkin236/Tech-Research-AI/actions/workflows/ci.yml/badge.svg)](https://github.com/Temkin236/Tech-Research-AI/actions)
+[![Vercel Deployment](https://img.shields.io/badge/Vercel-Frontend%20Live-000000?style=flat&logo=vercel&logoColor=white)](https://tech-research-ai.vercel.app/)
+[![Render Backend](https://img.shields.io/badge/Render-Backend%20Live-46E3B7?style=flat&logo=render&logoColor=black)](https://tech-research-ai.onrender.com/api/v1/health)
 [![Python Version](https://img.shields.io/badge/python-3.12%20%7C%203.14-blue.svg)](https://python.org)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688.svg)](https://fastapi.tiangolo.com)
 [![LangGraph](https://img.shields.io/badge/LangGraph-0.2.20-orange.svg)](https://github.com/langchain-ai/langgraph)
@@ -10,7 +12,27 @@
 
 > **Tech Research AI** is an autonomous multi-agent research platform that investigates inquiries, retrieves empirical evidence from web searches and user documents, verifies facts against an evidence registry, and synthesizes structured reports with authentic, grounded citations.
 
+### 🌐 Live Production Deployments
+* **Frontend Web Application (Vercel):** [https://tech-research-ai.vercel.app/](https://tech-research-ai.vercel.app/)
+* **Backend API & Swarm (Render):** [https://tech-research-ai.onrender.com](https://tech-research-ai.onrender.com)
+* **Interactive API Documentation:** [https://tech-research-ai.onrender.com/docs](https://tech-research-ai.onrender.com/docs)
+* **System Health Endpoint:** [https://tech-research-ai.onrender.com/api/v1/health](https://tech-research-ai.onrender.com/api/v1/health)
+
 ---
+
+## 📸 Application Showcase
+
+### Desktop Workspace
+![Tech Research AI Desktop Interface](docs/screenshots/dashboard-desktop.png)
+
+### Literature Explorer & AI Synthesis
+![Tech Research AI Explorer](docs/screenshots/research-explorer.png)
+
+### Mobile & Tablet Responsive View
+<p align="center">
+  <img src="docs/screenshots/mobile-responsive.png" alt="Tech Research AI Mobile Interface" width="340" />
+</p>
+
 
 ## Table of Contents
 - [Executive Overview](#executive-overview)
