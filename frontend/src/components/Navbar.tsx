@@ -123,10 +123,11 @@ export const Navbar: React.FC = () => {
 
           <Link
             to="/research/new"
-            className="btn-primary text-xs sm:text-sm px-3.5 py-1.5 flex items-center gap-1.5"
+            className="btn-primary text-xs sm:text-sm px-2.5 sm:px-3.5 py-1.5 flex items-center gap-1.5 shrink-0 shadow-warm-xs"
           >
             <Zap className="w-3.5 h-3.5" />
-            <span>Launch Research</span>
+            <span className="hidden sm:inline">Launch Research</span>
+            <span className="sm:hidden">Launch</span>
           </Link>
 
           {/* Mobile Menu Button */}
