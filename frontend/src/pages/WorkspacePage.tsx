@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import {
-  Compass,
-  FileText,
+  Cpu,
+  FileCode2,
   Search,
   CheckCircle2,
   RefreshCw,
@@ -11,6 +11,13 @@ import {
   ShieldAlert,
   Loader2,
   Share2,
+  Check,
+  Download,
+  Copy,
+  Terminal,
+  Layers,
+  Database,
+  Filter,
 } from 'lucide-react';
 import { api } from '../services/api';
 import { ResearchJobDetail, WorkflowEvent } from '../types';
@@ -28,8 +35,10 @@ export const WorkspacePage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [retrying, setRetrying] = useState(false);
+  const [copiedLink, setCopiedLink] = useState(false);
+  const [copiedFindings, setCopiedFindings] = useState(false);
+  const [findingFilter, setFindingFilter] = useState<'all' | 'verified' | 'disputed'>('all');
 
-  // Initial load of job details
   const fetchJob = async () => {
     if (!id) return;
     try {
@@ -49,6 +58,18 @@ export const WorkspacePage: React.FC = () => {
     fetchJob();
   }, [id]);
 
+  // Periodic polling while running/pending so sources and findings update live
+  useEffect(() => {
+    if (!id || !job) return;
+    if (job.status === 'completed' || job.status === 'failed') return;
+
+    const interval = setInterval(() => {
+      fetchJob();
+    }, 2500);
+
+    return () => clearInterval(interval);
+  }, [id, job?.status]);
+
   // Setup Server-Sent Events (SSE) connection
   useEffect(() => {
     if (!id) return;
@@ -60,14 +81,12 @@ export const WorkspacePage: React.FC = () => {
       try {
         const parsedEvent: WorkflowEvent = JSON.parse(e.data);
         setEvents((prev) => {
-          // Avoid duplicate events by ID
           if (prev.some((item) => item.id === parsedEvent.id)) {
             return prev;
           }
           return [...prev, parsedEvent];
         });
 
-        // Update current stage and progress dynamically if event provides it
         setJob((prev) => {
           if (!prev) return null;
           let newProgress = prev.progress;
@@ -89,15 +108,12 @@ export const WorkspacePage: React.FC = () => {
     };
 
     eventSource.addEventListener('done', () => {
-      console.log('Research workflow completed or ended.');
       fetchJob();
       eventSource.close();
     });
 
     eventSource.onerror = () => {
-      console.log('SSE connection closed or re-connecting...');
       eventSource.close();
-      // Periodically refresh job to catch completion
       setTimeout(fetchJob, 3000);
     };
 
@@ -119,24 +135,70 @@ export const WorkspacePage: React.FC = () => {
     }
   };
 
+  const handleShareLink = () => {
+    navigator.clipboard.writeText(window.location.href);
+    setCopiedLink(true);
+    setTimeout(() => setCopiedLink(false), 2000);
+  };
+
+  const handleExportEventsJson = () => {
+    if (!job) return;
+    const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify({ job, events }, null, 2));
+    const downloadAnchor = document.createElement('a');
+    downloadAnchor.setAttribute('href', dataStr);
+    downloadAnchor.setAttribute('download', `telemetry_job_${job.id.slice(0, 8)}.json`);
+    document.body.appendChild(downloadAnchor);
+    downloadAnchor.click();
+    downloadAnchor.remove();
+  };
+
+  const handleCopyFindings = () => {
+    if (!job || !job.findings) return;
+    const text = job.findings
+      .map(
+        (f, idx) =>
+          `### Finding ${idx + 1}: ${f.subquestion}\n- **Claim**: ${f.claim}\n- **Confidence**: ${Math.round(
+            f.confidence * 100
+          )}%\n- **Evidence**: "${f.evidence_excerpt || 'N/A'}"\n`
+      )
+      .join('\n');
+    navigator.clipboard.writeText(text);
+    setCopiedFindings(true);
+    setTimeout(() => setCopiedFindings(false), 2000);
+  };
+
   if (loading) {
     return (
-      <div className="card-warm p-16 text-center space-y-3">
-        <Loader2 className="w-8 h-8 animate-spin mx-auto text-[#B89576]" />
-        <p className="text-sm font-medium text-[#75685D]">Connecting to agent workspace...</p>
+      <div className="card-clean p-16 text-center space-y-3 bg-white">
+        <Loader2 className="w-8 h-8 animate-spin mx-auto text-[#785135]" />
+        <p className="text-sm font-mono text-[#6E6255]">Connecting to agent telemetry bus...</p>
       </div>
     );
   }
 
   if (error || !job) {
     return (
-      <div className="card-warm p-8 text-center space-y-4 max-w-xl mx-auto">
-        <AlertCircle className="w-10 h-10 mx-auto text-[#B6534B]" />
-        <h2 className="text-lg font-bold text-[#332B25]">Unable to Load Research Job</h2>
-        <p className="text-xs text-[#75685D]">{error || 'Job not found.'}</p>
-        <Link to="/dashboard" className="btn-secondary text-xs inline-flex">
-          Return to Dashboard
-        </Link>
+      <div className="card-clean p-8 text-center space-y-4 max-w-xl mx-auto border-[#E8E1D7] bg-white">
+        <AlertCircle className="w-10 h-10 mx-auto text-[#A63D38]" />
+        <h2 className="text-lg font-bold text-[#1A1612] font-mono">Unable to Connect to Research Pipeline</h2>
+        <p className="text-xs text-[#6E6255]">{error || 'Job not found in database.'}</p>
+        <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
+          <button
+            type="button"
+            onClick={() => {
+              setError(null);
+              setLoading(true);
+              fetchJob();
+            }}
+            className="btn-primary text-xs flex items-center gap-1.5"
+          >
+            <RefreshCw className="w-3.5 h-3.5" />
+            <span>Try Again</span>
+          </button>
+          <Link to="/dashboard" className="btn-secondary text-xs inline-flex">
+            Return to Dashboard
+          </Link>
+        </div>
       </div>
     );
   }
@@ -144,30 +206,67 @@ export const WorkspacePage: React.FC = () => {
   const isCompleted = job.status === 'completed';
   const isFailed = job.status === 'failed';
 
+  const filteredFindings = (job.findings || []).filter((f) => {
+    if (findingFilter === 'verified') return !f.is_disputed && f.confidence >= 0.7;
+    if (findingFilter === 'disputed') return f.is_disputed;
+    return true;
+  });
+
   return (
     <div className="space-y-6 max-w-6xl mx-auto">
       {/* Top Banner with Subject & Controls */}
-      <div className="card-warm p-6 space-y-3 bg-[#FFFEFC]">
+      <div className="card-clean p-6 space-y-3 border-[#E8E1D7] bg-white">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
-            <span className="text-[11px] font-mono text-[#75685D] bg-[#FAF7F2] px-2 py-0.5 rounded border border-[#E5D8C8]">
+          <div className="flex items-center gap-2 font-mono">
+            <span className="text-[11px] text-[#785135] bg-[#F6F1EB] px-2.5 py-0.5 rounded border border-[#E8E1D7]">
               JOB-{job.id.slice(0, 8)}
             </span>
             <span
               className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-full border ${
                 isCompleted
-                  ? 'bg-[#52785C]/15 text-[#52785C] border-[#52785C]/30'
+                  ? 'bg-[#EAF3ED] text-[#2E6B4E] border-[#C5DEC8]'
                   : isFailed
-                  ? 'bg-[#B6534B]/15 text-[#B6534B] border-[#B6534B]/30'
-                  : 'bg-[#B89576]/15 text-[#9B785B] border-[#B89576]/30'
+                  ? 'bg-[#FDF2F2] text-[#A83A35] border-[#F7D7D6]'
+                  : 'bg-[#F6F1EB] text-[#785135] border-[#E8E1D7]'
               }`}
             >
+              {job.status === 'running' && '● '}
               {job.status}
+            </span>
+            <span className="text-xs text-[#5C5248]">
+              {job.depth} • {job.focus}
             </span>
           </div>
 
           {/* Action buttons */}
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              onClick={handleShareLink}
+              className="btn-secondary text-xs flex items-center gap-1.5"
+              title="Copy link to this research workspace"
+            >
+              {copiedLink ? <Check className="w-3.5 h-3.5 text-[#2E6B4E]" /> : <Share2 className="w-3.5 h-3.5" />}
+              <span>{copiedLink ? 'Link Copied!' : 'Share'}</span>
+            </button>
+
+            <button
+              onClick={handleExportEventsJson}
+              className="btn-secondary text-xs flex items-center gap-1.5"
+              title="Export event logs as JSON"
+            >
+              <Download className="w-3.5 h-3.5 text-[#785135]" />
+              <span>Logs (JSON)</span>
+            </button>
+
+            <button
+              onClick={() => fetchJob()}
+              className="btn-secondary text-xs flex items-center gap-1.5"
+              title="Refresh job status and logs"
+            >
+              <RefreshCw className="w-3.5 h-3.5 text-[#785135]" />
+              <span>Refresh</span>
+            </button>
+
             {isFailed && (
               <button
                 onClick={handleRetry}
@@ -175,12 +274,13 @@ export const WorkspacePage: React.FC = () => {
                 className="btn-primary text-xs"
               >
                 <RefreshCw className={`w-3.5 h-3.5 ${retrying ? 'animate-spin' : ''}`} />
-                <span>Retry Research</span>
+                <span>Retry Pipeline</span>
               </button>
             )}
+
             {isCompleted && (
-              <Link to={`/report/${job.id}`} className="btn-primary text-xs shadow-warm-sm">
-                <FileText className="w-3.5 h-3.5" />
+              <Link to={`/report/${job.id}`} className="btn-primary text-xs shadow-sm">
+                <FileCode2 className="w-3.5 h-3.5" />
                 <span>Open Completed Report</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
@@ -188,13 +288,13 @@ export const WorkspacePage: React.FC = () => {
           </div>
         </div>
 
-        <h1 className="text-xl sm:text-2xl font-extrabold text-[#332B25] tracking-tight">
+        <h1 className="text-xl sm:text-2xl font-extrabold text-[#1A1612] tracking-tight">
           {job.topic}
         </h1>
 
         {job.instructions && (
-          <p className="text-xs text-[#75685D] italic">
-            Instructions: "{job.instructions}"
+          <p className="text-xs font-mono text-[#5C5248]">
+            Scope constraints: "{job.instructions}"
           </p>
         )}
       </div>
@@ -206,75 +306,164 @@ export const WorkspacePage: React.FC = () => {
         status={job.status}
       />
 
+      {/* Active Running Pulse Notification */}
+      {job.status === 'running' && (
+        <div className="p-3.5 rounded-xl border border-[#E8E1D7] bg-[#F6F1EB] flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs font-mono">
+          <div className="flex items-center gap-2.5 text-[#785135]">
+            <Loader2 className="w-4 h-4 animate-spin text-[#785135] shrink-0" />
+            <span>
+              Active LangGraph Node: <strong className="font-bold text-[#1A1612]">{job.current_stage || 'Graph Initializing'}</strong>
+            </span>
+          </div>
+          <span className="text-[11px] text-[#5C5248]">
+            Streaming live telemetry from LangGraph executor...
+          </span>
+        </div>
+      )}
+
+      {/* Completed Publication Ready CTA */}
+      {isCompleted && (
+        <div className="p-4 rounded-xl border border-[#C5DEC8] bg-[#EAF3ED] flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-lg bg-[#2E6B4E] text-white flex items-center justify-center shrink-0 shadow-sm">
+              <CheckCircle2 className="w-5 h-5" />
+            </div>
+            <div>
+              <h3 className="font-bold text-sm text-[#1A1612]">
+                Research Swarm Completed Successfully
+              </h3>
+              <p className="text-xs text-[#2E6B4E]">
+                Peer-reviewed publication generated with {job.sources?.length || 0} citations and {job.findings?.length || 0} verified findings.
+              </p>
+            </div>
+          </div>
+          <Link
+            to={`/report/${job.id}`}
+            className="btn-primary text-xs flex items-center justify-center gap-2 whitespace-nowrap shadow-sm"
+          >
+            <FileCode2 className="w-4 h-4" />
+            <span>Read Publication</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
+      )}
+
       {/* Failure message if failed */}
       {isFailed && (
-        <div className="p-4 bg-[#B6534B]/10 border border-[#B6534B]/30 rounded-xl flex items-start gap-3 text-xs text-[#B6534B]">
-          <ShieldAlert className="w-5 h-5 shrink-0 mt-0.5" />
-          <div>
-            <span className="font-bold block">Workflow Execution Halt</span>
-            <span>{job.error_message || 'The research workflow encountered an unrecoverable provider error.'}</span>
+        <div className="p-4 bg-[#FDF2F2] border border-[#F7D7D6] rounded-xl flex items-start gap-3 text-xs text-[#A83A35] font-mono">
+          <ShieldAlert className="w-5 h-5 shrink-0 mt-0.5 text-[#A83A35]" />
+          <div className="space-y-1">
+            <span className="font-bold text-[#A83A35]">Execution Error Encountered</span>
+            <p className="text-[#42382F]">
+              The agent swarm encountered an unexpected exception during execution. Click "Retry Pipeline" above to re-dispatch the swarm with fresh workers.
+            </p>
           </div>
         </div>
       )}
 
-      {/* Workspace Grid: Timeline & Discovered Evidence */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Left Column: Live Agent Timeline */}
-        <div className="lg:col-span-7 space-y-6">
+      {/* Main Grid: Agent Timeline + Sources / Findings */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Left Column: Real-time agent event stream */}
+        <div className="lg:col-span-1 space-y-4">
           <AgentTimeline events={events} />
         </div>
 
-        {/* Right Column: Evidence & Findings */}
-        <div className="lg:col-span-5 space-y-6">
-          {/* Sources Panel */}
-          <div className="card-warm p-5 space-y-3 bg-[#FFFEFC]">
-            <div className="flex items-center justify-between border-b border-[#E5D8C8] pb-2.5">
+        {/* Right Columns: Registered Sources and Extracted Findings */}
+        <div className="lg:col-span-2 space-y-6">
+          {/* Extracted Findings Matrix */}
+          <div className="card-clean p-5 space-y-4 border-[#E8E1D7] bg-white">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#E8E1D7] pb-3">
               <div className="flex items-center gap-2">
-                <Search className="w-4 h-4 text-[#B89576]" />
-                <h3 className="font-bold text-sm text-[#332B25]">
-                  Verified Sources
+                <Cpu className="w-4 h-4 text-[#785135]" />
+                <h3 className="font-bold text-sm text-[#1A1612] font-mono uppercase tracking-wider">
+                  Verified Technical Findings ({filteredFindings.length})
                 </h3>
               </div>
-              <span className="text-xs font-semibold text-[#75685D]">
-                {job.sources.length} captured
-              </span>
+
+              <div className="flex items-center gap-2 flex-wrap font-mono text-xs">
+                {/* Filter Tabs */}
+                <div className="flex items-center rounded-lg bg-[#FAF8F5] p-1 border border-[#E8E1D7]">
+                  <button
+                    type="button"
+                    onClick={() => setFindingFilter('all')}
+                    className={`px-2 py-0.5 rounded text-[11px] ${
+                      findingFilter === 'all' ? 'bg-[#F6F1EB] text-[#785135] font-semibold border border-[#E8E1D7]' : 'text-[#5C5248] hover:text-[#1A1612]'
+                    }`}
+                  >
+                    All
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setFindingFilter('verified')}
+                    className={`px-2 py-0.5 rounded text-[11px] ${
+                      findingFilter === 'verified' ? 'bg-[#EAF3ED] text-[#2E6B4E] font-semibold border border-[#C5DEC8]' : 'text-[#5C5248] hover:text-[#1A1612]'
+                    }`}
+                  >
+                    High Conf
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setFindingFilter('disputed')}
+                    className={`px-2 py-0.5 rounded text-[11px] ${
+                      findingFilter === 'disputed' ? 'bg-[#FEF5EA] text-[#8C5212] font-semibold border border-[#F3DFC1]' : 'text-[#5C5248] hover:text-[#1A1612]'
+                    }`}
+                  >
+                    Contested
+                  </button>
+                </div>
+
+                {job.findings && job.findings.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={handleCopyFindings}
+                    className="btn-secondary text-[11px] py-1 px-2.5 flex items-center gap-1"
+                    title="Copy findings as markdown"
+                  >
+                    {copiedFindings ? <Check className="w-3 h-3 text-[#2E6B4E]" /> : <Copy className="w-3 h-3" />}
+                    <span>{copiedFindings ? 'Copied' : 'Copy'}</span>
+                  </button>
+                )}
+              </div>
             </div>
 
-            {job.sources.length === 0 ? (
-              <div className="py-8 text-center text-xs text-[#75685D]">
-                No sources indexed yet. Researcher agent is actively searching.
+            {filteredFindings.length === 0 ? (
+              <div className="p-8 text-center text-[#8C7F73] font-mono text-xs space-y-1">
+                <Layers className="w-6 h-6 mx-auto text-[#D8CCC0] mb-1" />
+                <p>No verified findings match the current filter.</p>
+                <p className="text-[10px] text-[#8C7F73]">Findings stream in as the Analyst and Verifier agents execute.</p>
               </div>
             ) : (
-              <div className="space-y-3 max-h-[380px] overflow-y-auto pr-1">
-                {job.sources.map((s, idx) => (
-                  <SourceCard key={s.id} source={s} index={idx + 1} />
+              <div className="space-y-3">
+                {filteredFindings.map((finding, idx) => (
+                  <FindingCard key={finding.id || idx} finding={finding} />
                 ))}
               </div>
             )}
           </div>
 
-          {/* Findings Panel */}
-          <div className="card-warm p-5 space-y-3 bg-[#FFFEFC]">
-            <div className="flex items-center justify-between border-b border-[#E5D8C8] pb-2.5">
+          {/* Registered Sources Registry */}
+          <div className="card-clean p-5 space-y-4 border-[#E8E1D7] bg-white">
+            <div className="flex items-center justify-between border-b border-[#E8E1D7] pb-3">
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-[#52785C]" />
-                <h3 className="font-bold text-sm text-[#332B25]">
-                  Synthesized Findings
+                <Search className="w-4 h-4 text-[#785135]" />
+                <h3 className="font-bold text-sm text-[#1A1612] font-mono uppercase tracking-wider">
+                  Registered Source Corpus ({job.sources?.length || 0})
                 </h3>
               </div>
-              <span className="text-xs font-semibold text-[#75685D]">
-                {job.findings.length} findings
+              <span className="text-xs font-mono text-[#5C5248]">
+                Live web & vector RAG excerpts
               </span>
             </div>
 
-            {job.findings.length === 0 ? (
-              <div className="py-8 text-center text-xs text-[#75685D]">
-                Awaiting analytical synthesis from Analyst agent.
+            {!job.sources || job.sources.length === 0 ? (
+              <div className="p-8 text-center text-[#8C7F73] font-mono text-xs space-y-1">
+                <Search className="w-6 h-6 mx-auto text-[#D8CCC0] mb-1" />
+                <p>Retrieval swarm is querying search providers and vector embeddings...</p>
               </div>
             ) : (
-              <div className="space-y-3 max-h-[380px] overflow-y-auto pr-1">
-                {job.findings.map((f) => (
-                  <FindingCard key={f.id} finding={f} />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {job.sources.map((src, idx) => (
+                  <SourceCard key={src.id || idx} source={src} index={idx + 1} />
                 ))}
               </div>
             )}

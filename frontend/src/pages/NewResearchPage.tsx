@@ -1,67 +1,89 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import {
-  Compass,
+  Cpu,
   ArrowRight,
   Clock,
   Layers,
   Sliders,
-  FileText,
+  FileCode2,
   AlertCircle,
   Loader2,
   CheckSquare,
   Square,
   Sparkles,
+  Zap,
+  Search,
+  Database,
+  Plus,
+  RefreshCw,
+  RotateCcw,
 } from 'lucide-react';
 import { api } from '../services/api';
 import { ResearchDepth, ResearchFocus, DocumentItem } from '../types';
+import { DocumentUploadModal } from '../components/DocumentUploadModal';
 
 export const NewResearchPage: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [topic, setTopic] = useState('');
   const [instructions, setInstructions] = useState('');
   const [depth, setDepth] = useState<ResearchDepth>('standard');
-  const [focus, setFocus] = useState<ResearchFocus>('general');
+  const [focus, setFocus] = useState<ResearchFocus>('technical');
   const [maxSources, setMaxSources] = useState(8);
   const [availableDocs, setAvailableDocs] = useState<DocumentItem[]>([]);
   const [selectedDocs, setSelectedDocs] = useState<string[]>([]);
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
 
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
+  const loadDocuments = () => {
     api.listDocuments().then(setAvailableDocs).catch(() => {});
-  }, []);
+  };
+
+  useEffect(() => {
+    loadDocuments();
+    const params = new URLSearchParams(location.search);
+    const initialTopic = params.get('topic');
+    if (initialTopic) {
+      setTopic(initialTopic);
+    }
+  }, [location.search]);
 
   const samplePrompts = [
     {
-      label: 'LangGraph vs CrewAI Architecture',
-      topic: 'Compare LangGraph, CrewAI, and PydanticAI for building a resilient Python AI application',
+      label: 'LangGraph vs CrewAI vs PydanticAI',
+      topic: 'Compare LangGraph, CrewAI, and PydanticAI for building resilient autonomous Python AI applications',
       depth: 'standard' as ResearchDepth,
       focus: 'comparative' as ResearchFocus,
-      instructions: 'Examine state management, parallel branch execution, cyclic loop handling, and long-term durability.',
+      sources: 8,
+      instructions: 'Examine state graph management, parallel tool calling, loop handling, memory durability, and enterprise reliability.',
     },
     {
-      label: 'AI Adoption in Ethiopia',
-      topic: 'Research the opportunities, infrastructure challenges, and policy initiatives of AI adoption in Ethiopia',
+      label: 'Rust vs Go Microservices',
+      topic: 'Analyze Rust vs Go for high-throughput distributed microservices, network proxies, and cloud infrastructure',
       depth: 'standard' as ResearchDepth,
-      focus: 'general' as ResearchFocus,
-      instructions: 'Include telecommunications infrastructure, digital strategy, talent development, and key sectors like agriculture.',
+      focus: 'comparative' as ResearchFocus,
+      sources: 8,
+      instructions: 'Evaluate memory footprint, async runtime overhead (Tokio vs Goroutines), compile times, and latency profiles under load.',
     },
     {
-      label: 'Production RAG Advances',
-      topic: 'Analyze current developments and architectural patterns in retrieval-augmented generation for enterprise AI',
+      label: 'WebGPU & WebAssembly (WASM) LLMs',
+      topic: 'Investigate the current state and performance of client-side LLM inference using WebGPU and WebAssembly',
       depth: 'deep' as ResearchDepth,
       focus: 'technical' as ResearchFocus,
-      instructions: 'Focus on hybrid search, re-ranking models, query expansion, and citation verification techniques.',
+      sources: 12,
+      instructions: 'Focus on tensor quantization (GGUF/AWQ), browser memory constraints, shader optimizations, and cold-start latency.',
     },
     {
-      label: 'Student AI Cloud Deployment',
-      topic: 'Compare cloud deployment platforms (Render, Railway, Fly.io, Cloud Run) for a student-built AI product',
-      depth: 'quick' as ResearchDepth,
-      focus: 'comparative' as ResearchFocus,
-      instructions: 'Evaluate free tiers, container support, persistent database availability, and simplicity.',
+      label: 'Quantum Benchmarks vs HPC',
+      topic: 'Assess recent quantum supremacy benchmarks against classical tensor network simulators and hybrid algorithms',
+      depth: 'deep' as ResearchDepth,
+      focus: 'technical' as ResearchFocus,
+      sources: 12,
+      instructions: 'Cover qubit coherence times, error correction overhead, surface codes, and practical optimization limits.',
     },
   ];
 
@@ -70,13 +92,31 @@ export const NewResearchPage: React.FC = () => {
     setDepth(s.depth);
     setFocus(s.focus);
     setInstructions(s.instructions);
-    setMaxSources(s.depth === 'quick' ? 4 : s.depth === 'deep' ? 12 : 8);
+    setMaxSources(s.sources);
+  };
+
+  const handleResetForm = () => {
+    setTopic('');
+    setInstructions('');
+    setDepth('standard');
+    setFocus('technical');
+    setMaxSources(8);
+    setSelectedDocs([]);
+    setError(null);
   };
 
   const toggleDocSelection = (docId: string) => {
     setSelectedDocs((prev) =>
       prev.includes(docId) ? prev.filter((id) => id !== docId) : [...prev, docId]
     );
+  };
+
+  const handleSelectAllDocs = () => {
+    setSelectedDocs(availableDocs.map((d) => d.id));
+  };
+
+  const handleClearDocSelection = () => {
+    setSelectedDocs([]);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -100,226 +140,329 @@ export const NewResearchPage: React.FC = () => {
       });
       navigate(`/workspace/${created.id}`);
     } catch (err: any) {
-      setError(err.message || 'Failed to start research job.');
+      setError(err.message || 'Failed to initialize agent swarm.');
       setSubmitting(false);
-    }
-  };
-
-  const getEstimatedDuration = () => {
-    switch (depth) {
-      case 'quick':
-        return '~30 - 60 seconds (Focused search & verification)';
-      case 'deep':
-        return '~2 - 3 minutes (Broad multi-angle search & iterative gap resolution)';
-      default:
-        return '~60 - 90 seconds (Balanced multi-agent synthesis)';
     }
   };
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">
-      {/* Page Header */}
-      <div className="space-y-1">
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-[#332B25] tracking-tight">
-          New Research Investigation
-        </h1>
-        <p className="text-sm text-[#75685D]">
-          Configure parameters for the multi-agent research team.
-        </p>
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="space-y-1">
+          <div className="flex items-center gap-2">
+            <Cpu className="w-5 h-5 text-[#785135]" />
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-[#1A1612] tracking-tight">
+              Launch Agent Swarm
+            </h1>
+          </div>
+          <p className="text-xs sm:text-sm font-mono text-[#6E6255]">
+            Configure research parameters, retrieval boundaries, and vector knowledge grounding.
+          </p>
+        </div>
+
+        <button
+          type="button"
+          onClick={handleResetForm}
+          className="btn-secondary text-xs flex items-center gap-1.5 self-start sm:self-auto"
+        >
+          <RotateCcw className="w-3.5 h-3.5 text-[#6E6255]" />
+          <span>Reset Form</span>
+        </button>
       </div>
 
-      {/* Example Templates */}
-      <div className="card-warm p-4 bg-[#FFFEFC] space-y-3">
-        <div className="flex items-center gap-2 text-xs font-bold text-[#9B785B]">
-          <Sparkles className="w-4 h-4" />
-          <span>Quick-Start Templates</span>
+      {/* Preset Benchmarks */}
+      <div className="card-clean p-5 space-y-3 border-[#E8E1D7] bg-white">
+        <div className="flex items-center gap-2 text-xs font-mono font-bold text-[#785135] uppercase tracking-wider">
+          <Sparkles className="w-4 h-4 text-[#785135]" />
+          <span>Quick Preset Benchmarks (Click to auto-populate)</span>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
           {samplePrompts.map((s) => (
             <button
               key={s.label}
               type="button"
               onClick={() => handleApplySample(s)}
-              className="text-left p-3 rounded-lg bg-[#FAF7F2] hover:bg-[#F3EADF] border border-[#E5D8C8] text-xs transition-colors"
+              className="text-left p-3 rounded-xl bg-[#FAF8F5] hover:bg-[#F4EBE1] border border-[#E8E1D7] hover:border-[#785135]/40 transition-all space-y-1 group"
             >
-              <div className="font-bold text-[#332B25]">{s.label}</div>
-              <div className="text-[#75685D] truncate mt-0.5">{s.topic}</div>
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-[#1A1612] group-hover:text-[#785135] font-mono">
+                  {s.label}
+                </span>
+                <span className="text-[10px] font-mono text-[#785135] bg-[#F4EBE1] px-2 py-0.5 rounded border border-[#E0D5C7]">
+                  {s.depth}
+                </span>
+              </div>
+              <p className="text-[11px] text-[#6E6255] line-clamp-1">
+                {s.topic}
+              </p>
             </button>
           ))}
         </div>
       </div>
 
-      {/* Main Research Form */}
-      <form onSubmit={handleSubmit} className="card-warm p-6 md:p-8 space-y-6 bg-[#FFFEFC]">
-        {/* Research Topic */}
-        <div className="space-y-2">
-          <label className="block text-sm font-bold text-[#332B25]">
-            Research Topic or Primary Inquiry <span className="text-[#B6534B]">*</span>
+      {/* Configuration Form */}
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Topic Input */}
+        <div className="card-clean p-6 space-y-4 border-[#E8E1D7] bg-white">
+          <label className="block space-y-2">
+            <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#1A1612] flex items-center gap-2">
+              <span>Research Inquiry / Hypothesis</span>
+              <span className="text-[#785135]">*</span>
+            </span>
+            <textarea
+              rows={3}
+              value={topic}
+              onChange={(e) => setTopic(e.target.value)}
+              placeholder="e.g. Compare Rust Tokio async scheduler performance against Go Goroutines for high-concurrency websocket servers..."
+              className="w-full bg-[#FAF8F5] border border-[#E8E1D7] focus:border-[#785135] rounded-xl p-4 text-sm text-[#1A1612] placeholder-[#9E9284] focus:outline-none transition-colors font-mono leading-relaxed"
+            />
           </label>
-          <input
-            type="text"
-            required
-            value={topic}
-            onChange={(e) => setTopic(e.target.value)}
-            placeholder="e.g. Compare LangGraph vs CrewAI architecture for production AI agents..."
-            className="w-full bg-[#FAF7F2] border border-[#E5D8C8] focus:border-[#B89576] rounded-xl px-4 py-3 text-sm text-[#332B25] placeholder-[#75685D]/60 focus:outline-none transition-colors"
-          />
+
+          {/* Supplementary Instructions */}
+          <label className="block space-y-2">
+            <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#6E6255]">
+              Target Scope & Custom Constraints (Optional)
+            </span>
+            <input
+              type="text"
+              value={instructions}
+              onChange={(e) => setInstructions(e.target.value)}
+              placeholder="e.g. Include 2024 benchmarks, emphasize memory limits and garbage collection pause times..."
+              className="w-full bg-[#FAF8F5] border border-[#E8E1D7] focus:border-[#785135] rounded-xl px-4 py-2.5 text-xs text-[#1A1612] placeholder-[#9E9284] focus:outline-none transition-colors font-mono"
+            />
+          </label>
         </div>
 
-        {/* Instructions */}
-        <div className="space-y-2">
-          <label className="block text-sm font-bold text-[#332B25]">
-            Special Instructions & Scope Constraints (Optional)
-          </label>
-          <textarea
-            rows={3}
-            value={instructions}
-            onChange={(e) => setInstructions(e.target.value)}
-            placeholder="Specify any required sections, exclusions, domain focus, or specific comparison metrics..."
-            className="w-full bg-[#FAF7F2] border border-[#E5D8C8] focus:border-[#B89576] rounded-xl p-4 text-sm text-[#332B25] placeholder-[#75685D]/60 focus:outline-none transition-colors"
-          />
-        </div>
-
-        {/* Depth & Focus Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-2">
+        {/* Depth & Focus Selectors */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Depth */}
-          <div className="space-y-2">
-            <label className="block text-sm font-bold text-[#332B25]">
+          <div className="card-clean p-5 space-y-3 border-[#E8E1D7] bg-white">
+            <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#1A1612] block">
               Investigation Depth
-            </label>
+            </span>
             <div className="grid grid-cols-3 gap-2">
-              {(['quick', 'standard', 'deep'] as ResearchDepth[]).map((d) => (
+              {[
+                { id: 'quick', label: 'Quick', desc: '4 sources (~30s)' },
+                { id: 'standard', label: 'Standard', desc: '8 sources (~60s)' },
+                { id: 'deep', label: 'Comprehensive', desc: '12+ sources (~2m)' },
+              ].map((d) => (
                 <button
-                  key={d}
+                  key={d.id}
                   type="button"
                   onClick={() => {
-                    setDepth(d);
-                    setMaxSources(d === 'quick' ? 4 : d === 'deep' ? 12 : 8);
+                    setDepth(d.id as ResearchDepth);
+                    setMaxSources(d.id === 'quick' ? 4 : d.id === 'deep' ? 12 : 8);
                   }}
-                  className={`py-2 px-3 rounded-lg text-xs font-bold capitalize transition-colors border ${
-                    depth === d
-                      ? 'bg-[#E8D8C5] text-[#332B25] border-[#B89576]'
-                      : 'bg-[#FAF7F2] text-[#75685D] border-[#E5D8C8] hover:bg-[#F3EADF]'
+                  className={`p-3 rounded-xl border text-center transition-all ${
+                    depth === d.id
+                      ? 'bg-[#F4EBE1] border-[#785135] text-[#785135] shadow-warm-xs font-bold'
+                      : 'bg-[#FAF8F5] border-[#E8E1D7] text-[#6E6255] hover:text-[#1A1612] hover:border-[#D5C4B4]'
                   }`}
                 >
-                  {d}
+                  <div className="text-xs font-bold font-mono">{d.label}</div>
+                  <div className="text-[10px] text-[#9E9284] mt-0.5">{d.desc}</div>
                 </button>
               ))}
             </div>
-            <p className="text-[11px] text-[#75685D]">
-              {depth === 'quick' && 'Fast overview with 3-4 key sources.'}
-              {depth === 'standard' && 'Comprehensive analysis with 6-8 sources.'}
-              {depth === 'deep' && 'Thorough investigation with iterative follow-up and 10-15 sources.'}
-            </p>
           </div>
 
           {/* Focus */}
-          <div className="space-y-2">
-            <label className="block text-sm font-bold text-[#332B25]">
+          <div className="card-clean p-5 space-y-3 border-[#E8E1D7] bg-white">
+            <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#1A1612] block">
               Analytical Focus
-            </label>
-            <select
-              value={focus}
-              onChange={(e) => setFocus(e.target.value as ResearchFocus)}
-              className="w-full bg-[#FAF7F2] border border-[#E5D8C8] focus:border-[#B89576] rounded-xl px-3 py-2.5 text-sm text-[#332B25] focus:outline-none"
-            >
-              <option value="general">General Overview</option>
-              <option value="technical">Technical & Architectural</option>
-              <option value="academic">Academic & Empirical Research</option>
-              <option value="business">Business & Market Strategy</option>
-              <option value="comparative">Comparative Evaluation</option>
-            </select>
+            </span>
+            <div className="grid grid-cols-2 gap-2">
+              {[
+                { id: 'technical', label: 'Technical Depth' },
+                { id: 'comparative', label: 'Comparative Benchmark' },
+                { id: 'scientific', label: 'Scientific & Papers' },
+                { id: 'industry', label: 'Industry & Scaling' },
+              ].map((f) => (
+                <button
+                  key={f.id}
+                  type="button"
+                  onClick={() => setFocus(f.id as ResearchFocus)}
+                  className={`p-3 rounded-xl border text-left transition-all ${
+                    focus === f.id
+                      ? 'bg-[#F4EBE1] border-[#785135] text-[#785135] shadow-warm-xs font-bold'
+                      : 'bg-[#FAF8F5] border-[#E8E1D7] text-[#6E6255] hover:text-[#1A1612] hover:border-[#D5C4B4]'
+                  }`}
+                >
+                  <div className="text-xs font-bold font-mono">{f.label}</div>
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
-        {/* Max Sources Slider */}
-        <div className="space-y-2 pt-2">
-          <div className="flex items-center justify-between text-sm">
-            <label className="font-bold text-[#332B25]">Maximum Verified Sources</label>
-            <span className="font-mono font-bold text-[#9B785B]">{maxSources} sources</span>
+        {/* Max Sources Controls */}
+        <div className="card-clean p-5 space-y-3 border-[#E8E1D7] bg-white">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#1A1612]">
+              Maximum Verifiable Sources: <span className="text-[#785135] font-extrabold">{maxSources}</span>
+            </span>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setMaxSources(Math.max(2, maxSources - 2))}
+                className="w-7 h-7 rounded-lg bg-[#FAF8F5] border border-[#E8E1D7] text-[#1A1612] hover:bg-[#F4EBE1] flex items-center justify-center font-mono text-sm hover:border-[#D5C4B4]"
+              >
+                -
+              </button>
+              <button
+                type="button"
+                onClick={() => setMaxSources(Math.min(20, maxSources + 2))}
+                className="w-7 h-7 rounded-lg bg-[#FAF8F5] border border-[#E8E1D7] text-[#1A1612] hover:bg-[#F4EBE1] flex items-center justify-center font-mono text-sm hover:border-[#D5C4B4]"
+              >
+                +
+              </button>
+            </div>
           </div>
           <input
             type="range"
-            min={2}
-            max={16}
-            step={1}
+            min="2"
+            max="20"
+            step="1"
             value={maxSources}
-            onChange={(e) => setMaxSources(Number(e.target.value))}
-            className="w-full accent-[#B89576]"
+            onChange={(e) => setMaxSources(parseInt(e.target.value, 10))}
+            className="w-full accent-[#785135] bg-[#F4EBE1] h-1.5 rounded-lg cursor-pointer"
           />
         </div>
 
-        {/* Document Selection */}
-        {availableDocs.length > 0 && (
-          <div className="space-y-3 pt-2">
-            <label className="block text-sm font-bold text-[#332B25]">
-              Include Uploaded Documents in Evidence Retrieval
-            </label>
-            <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
+        {/* Local Vector RAG Documents */}
+        <div className="card-clean p-5 space-y-4 border-[#E8E1D7] bg-white">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#E8E1D7] pb-3">
+            <div className="flex items-center gap-2">
+              <Database className="w-4 h-4 text-[#785135]" />
+              <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#1A1612]">
+                Include Local Vector Documents ({selectedDocs.length} selected)
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              {availableDocs.length > 0 && (
+                <>
+                  <button
+                    type="button"
+                    onClick={handleSelectAllDocs}
+                    className="text-[11px] font-mono text-[#785135] hover:underline font-semibold"
+                  >
+                    Select All
+                  </button>
+                  <span className="text-[#D5C4B4]">|</span>
+                  <button
+                    type="button"
+                    onClick={handleClearDocSelection}
+                    className="text-[11px] font-mono text-[#6E6255] hover:underline"
+                  >
+                    Clear
+                  </button>
+                  <span className="text-[#D5C4B4]">|</span>
+                </>
+              )}
+              <button
+                type="button"
+                onClick={() => setIsUploadModalOpen(true)}
+                className="btn-secondary text-[11px] py-1 px-2.5 flex items-center gap-1"
+              >
+                <Plus className="w-3 h-3 text-[#785135]" />
+                <span>Upload Document</span>
+              </button>
+            </div>
+          </div>
+
+          {availableDocs.length === 0 ? (
+            <div className="p-4 bg-[#FAF8F5] rounded-xl border border-dashed border-[#E8E1D7] text-center space-y-2">
+              <p className="text-xs font-mono text-[#6E6255]">
+                No documents currently indexed in ChromaDB vector repository.
+              </p>
+              <button
+                type="button"
+                onClick={() => setIsUploadModalOpen(true)}
+                className="btn-secondary text-xs inline-flex"
+              >
+                Upload First File to ChromaDB
+              </button>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 max-h-48 overflow-y-auto pr-1">
               {availableDocs.map((doc) => {
                 const isSelected = selectedDocs.includes(doc.id);
                 return (
-                  <div
+                  <button
                     key={doc.id}
+                    type="button"
                     onClick={() => toggleDocSelection(doc.id)}
-                    className={`p-3 rounded-lg border text-xs flex items-center justify-between cursor-pointer transition-colors ${
+                    className={`p-3 rounded-xl border text-left flex items-start gap-3 transition-all ${
                       isSelected
-                        ? 'bg-[#F3EADF] border-[#B89576] text-[#332B25]'
-                        : 'bg-[#FAF7F2] border-[#E5D8C8] text-[#75685D] hover:bg-[#F3EADF]/60'
+                        ? 'bg-[#F4EBE1] border-[#785135] text-[#1A1612]'
+                        : 'bg-[#FAF8F5] border-[#E8E1D7] text-[#6E6255] hover:border-[#D5C4B4]'
                     }`}
                   >
-                    <div className="flex items-center gap-2 truncate">
+                    <div className="mt-0.5">
                       {isSelected ? (
-                        <CheckSquare className="w-4 h-4 text-[#9B785B] shrink-0" />
+                        <CheckSquare className="w-4 h-4 text-[#785135] shrink-0" />
                       ) : (
-                        <Square className="w-4 h-4 text-[#75685D] shrink-0" />
+                        <Square className="w-4 h-4 text-[#D5C4B4] shrink-0" />
                       )}
-                      <span className="font-medium truncate">{doc.filename}</span>
                     </div>
-                    <span className="text-[11px] text-[#75685D] shrink-0">
-                      {doc.chunk_count} chunks
-                    </span>
-                  </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-xs font-bold truncate text-[#1A1612]">
+                        {doc.filename}
+                      </div>
+                      <div className="text-[10px] font-mono text-[#6E6255] mt-0.5">
+                        {doc.chunk_count} passages • {(doc.file_size / 1024).toFixed(1)} KB
+                      </div>
+                    </div>
+                  </button>
                 );
               })}
             </div>
-          </div>
-        )}
-
-        {/* Expected Time Note */}
-        <div className="p-3 bg-[#FAF7F2] rounded-xl border border-[#E5D8C8] flex items-center gap-3 text-xs text-[#75685D]">
-          <Clock className="w-4 h-4 text-[#B89576] shrink-0" />
-          <span>Expected processing duration: <strong>{getEstimatedDuration()}</strong></span>
+          )}
         </div>
 
         {error && (
-          <div className="p-4 bg-[#B6534B]/10 border border-[#B6534B]/30 rounded-xl flex items-center gap-3 text-sm text-[#B6534B]">
-            <AlertCircle className="w-5 h-5 shrink-0" />
+          <div className="p-4 bg-[#FDF2F2] border border-[#F7D7D6] rounded-xl flex items-center gap-2 text-xs font-mono text-[#A63D38]">
+            <AlertCircle className="w-4 h-4 text-[#A63D38] shrink-0" />
             <span>{error}</span>
           </div>
         )}
 
-        {/* Submit */}
-        <div className="pt-4 flex justify-end">
+        {/* Submit Bar */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
+          <Link to="/dashboard" className="text-xs font-mono text-[#6E6255] hover:text-[#1A1612] transition-colors">
+            ← Cancel & Return to Dashboard
+          </Link>
+
           <button
             type="submit"
-            disabled={submitting || !topic.trim()}
-            className="btn-primary px-8 py-3 text-sm shadow-warm-md"
+            disabled={!topic.trim() || submitting}
+            className="btn-primary text-sm px-8 py-3.5 shadow-sm w-full sm:w-auto"
           >
             {submitting ? (
               <>
                 <Loader2 className="w-4 h-4 animate-spin" />
-                <span>Launching Multi-Agent System...</span>
+                <span>Initializing Multi-Agent Graph...</span>
               </>
             ) : (
               <>
-                <span>Start Research</span>
+                <Zap className="w-4 h-4" />
+                <span>Launch Research Swarm</span>
                 <ArrowRight className="w-4 h-4" />
               </>
             )}
           </button>
         </div>
       </form>
+
+      {/* Embedded Upload Modal */}
+      <DocumentUploadModal
+        isOpen={isUploadModalOpen}
+        onClose={() => setIsUploadModalOpen(false)}
+        onSuccess={() => {
+          loadDocuments();
+        }}
+      />
     </div>
   );
 };
