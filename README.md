@@ -1,6 +1,6 @@
 # Tech Research AI — Autonomous Multi-Agent Research Platform
 
-[![CI Pipeline](https://github.com/Temkin236/DEEP-RESEARCH-AI-/actions/workflows/ci.yml/badge.svg)](https://github.com/Temkin236/DEEP-RESEARCH-AI-/actions)
+[![CI Pipeline](https://github.com/Temkin236/Tech-Research-AI/actions/workflows/ci.yml/badge.svg)](https://github.com/Temkin236/Tech-Research-AI/actions)
 [![Python Version](https://img.shields.io/badge/python-3.12%20%7C%203.14-blue.svg)](https://python.org)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688.svg)](https://fastapi.tiangolo.com)
 [![LangGraph](https://img.shields.io/badge/LangGraph-0.2.20-orange.svg)](https://github.com/langchain-ai/langgraph)
@@ -144,8 +144,8 @@ User Query Submitted
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/Temkin236/DEEP-RESEARCH-AI-.git
-cd DEEP-RESEARCH-AI-
+git clone https://github.com/Temkin236/Tech-Research-AI.git
+cd Tech-Research-AI
 ```
 
 ### 2. Set Up Backend
