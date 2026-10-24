@@ -319,11 +319,22 @@ Comprehensive guides located in `docs/`:
 
 ---
 
-## Project Roadmap
+## Project Curriculum Milestones & Roadmap
 
-- [x] **Week 9: Research Agent** — Multi-agent LangGraph workflow, planner, researcher, analyst, verifier, reporter, shared evidence registry, citation validation.
-- [x] **Week 11: Production Agent** — FastAPI backend, PostgreSQL/SQLite persistence, Alembic migrations, ChromaDB RAG, SSRF protection, Docker Compose, 100% passing tests.
-- [x] **Week 13: Final Showcase** — Executive Light-Brown UI, complete technical documentation suite, 15-slide PowerPoint deck, 5-8 minute demo script, 15+ interview Q&As.
+| Milestone | Deliverable & Implementation Status | Key Technologies & Capabilities |
+|---|---|---|
+| **Week 3 → AI Chatbot** | **Complete** (`/api/v1/research/chat`, `frontend/src/pages/ChatPage.tsx`) | Interactive LLM chat terminal, conversation history tracking, suggested follow-ups, copy & export transcript, Gemini/OpenAI multi-provider support. |
+| **Week 6 → RAG Assistant** | **Complete** (`/api/v1/documents`, `frontend/src/pages/DocumentsPage.tsx`) | Document parsing (PDF, DOCX, TXT, MD), semantic chunking with 200-char overlap, ChromaDB local vector embeddings, similarity search, ground research in uploaded files. |
+| **Week 9 → Research Agent** | **Complete** (`backend/app/workflows/graph.py`, 5 specialized agents) | 5-agent LangGraph state machine (Planner, Researcher, Analyst, Verifier, Reporter), deterministic evidence registry, citation validation with `[n]` bracket keys, zero-hallucination auditing. |
+| **Week 11 → Production Agent** | **Complete** (`render.yaml`, `railway.json`, `docker-compose.yml`, `backend/Dockerfile`) | Cloud deployment ready on Render & Railway, multi-service Docker Compose (PostgreSQL, ChromaDB, FastAPI, Nginx React), Alembic migrations, healthcheck telemetry (`/api/v1/health`), SSRF security filtering. |
+| **Week 13 → Final Showcase** | **Complete** (`docs/SHOWCASE.md`, `scripts/generate_presentation.py`, `scripts/demo_showcase.py`) | Executive clean light-brown UI design system, 15-slide PowerPoint deck (`docs/Deep_Research_AI_Showcase.pptx`), 5-8 minute demo script, 15+ technical interview Q&As, 100% test pass rate. |
+
+### Technical Prerequisites & Stack Mapping
+- **Python 3 + Virtualenv**: Installed & verified (`backend/.venv` running Python 3.14/3.12).
+- **LLM APIs**: Google Gemini (`google-generativeai`) + OpenAI (`openai`) with automatic intelligent fallback.
+- **Orchestration**: LangChain Core (`langchain-core`) & LangGraph (`langgraph`) cyclic state graphs + PydanticAI (`pydantic-ai`).
+- **Vector DB for RAG**: ChromaDB (`chromadb`) persistent vector collection with semantic cosine similarity search.
+- **Deployment Platform Blueprints**: Render Blueprint (`render.yaml`), Railway configuration (`railway.json`, `backend/Procfile`), and multi-container Docker Compose (`docker-compose.yml`).
 
 ---
 
