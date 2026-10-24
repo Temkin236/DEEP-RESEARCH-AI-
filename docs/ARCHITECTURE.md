@@ -1,8 +1,8 @@
-# Deep Research AI — Architecture Blueprint
+# Tech Research AI — Architecture Blueprint
 
 ## 1. Executive Architecture Overview
 
-Deep Research AI is an autonomous multi-agent research platform designed to investigate complex subjects, gather empirical evidence from the live web and uploaded documents, cross-check claims against an evidence registry, and compile structured reports with verifiable citations.
+Tech Research AI is an autonomous multi-agent research platform designed to investigate complex subjects, gather empirical evidence from the live web and uploaded documents, cross-check claims against an evidence registry, and compile structured reports with verifiable citations.
 
 ```
                     +--------------------------------+

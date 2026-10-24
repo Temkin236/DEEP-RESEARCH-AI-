@@ -1,4 +1,4 @@
-# User Guide — Deep Research AI
+# User Guide — Tech Research AI
 
 ## 1. Getting Started
 

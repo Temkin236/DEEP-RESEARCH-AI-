@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Deep Research AI - Automated Milestone & Showcase Demonstration Script
+Tech Research AI - Automated Milestone & Showcase Demonstration Script
 Walks through the entire curriculum milestones:
 - Week 3: AI Chatbot (Interactive LLM conversation with history)
 - Week 6: RAG Assistant (Document parsing, chunking, ChromaDB vector retrieval)
@@ -139,7 +139,7 @@ def run_week11_demo():
 
 def run_week13_demo():
     print_header("WEEK 13: Final Showcase")
-    pptx_path = Path(__file__).resolve().parent.parent / "docs" / "Deep_Research_AI_Showcase.pptx"
+    pptx_path = Path(__file__).resolve().parent.parent / "docs" / "Tech_Research_AI_Showcase.pptx"
     
     print(f"[Showcase Presentation]: {pptx_path}")
     if pptx_path.exists():
@@ -157,7 +157,7 @@ def run_week13_demo():
 
 def main():
     print("=" * 75)
-    print("     DEEP RESEARCH AI - FULL MILESTONE & CURRICULUM VERIFICATION")
+    print("     TECH RESEARCH AI - FULL MILESTONE & CURRICULUM VERIFICATION")
     print("=" * 75)
     
     try:

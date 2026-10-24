@@ -1,4 +1,4 @@
-# API Reference — Deep Research AI
+# API Reference — Tech Research AI
 
 Base URL: `http://localhost:8000/api`
 

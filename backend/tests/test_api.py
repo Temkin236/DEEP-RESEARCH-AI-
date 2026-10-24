@@ -39,7 +39,7 @@ def test_document_upload_and_validation():
     assert bad_res.status_code == 400
 
     # Upload valid text document
-    good_content = b"# Deep Research AI Technical Note\nThis document outlines multi-agent protocols."
+    good_content = b"# Tech Research AI Technical Note\nThis document outlines multi-agent protocols."
     good_file = ("notes.md", io.BytesIO(good_content), "text/markdown")
     upload_res = client.post("/api/v1/documents/upload", files={"file": good_file})
     assert upload_res.status_code == 201

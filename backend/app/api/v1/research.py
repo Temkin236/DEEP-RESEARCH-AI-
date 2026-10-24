@@ -34,7 +34,7 @@ def create_research_job(
     background_tasks: BackgroundTasks,
     db: Session = Depends(get_db)
 ):
-    """Initiate a new multi-agent deep research investigation."""
+    """Initiate a new multi-agent tech research investigation."""
     new_job = ResearchJob(
         topic=request.topic.strip(),
         instructions=request.instructions.strip() if request.instructions else None,

@@ -3,10 +3,10 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "deep-research-ai-backend"
+name = "tech-research-ai-backend"
 version = "1.0.0"
 description = "Multi-Agent Research Assistant backend with LangGraph, FastAPI, and Chroma"
-authors = [{ name = "Deep Research AI Team" }]
+authors = [{ name = "Tech Research AI Team" }]
 requires-python = ">=3.11"
 dependencies = [
     "fastapi>=0.115.0",

@@ -1,8 +1,8 @@
-# Production Deployment Guide — Deep Research AI
+# Production Deployment Guide — Tech Research AI
 
 ## 1. Containerized Deployment via Docker Compose
 
-The simplest method to deploy Deep Research AI is using the provided multi-service `docker-compose.yml`.
+The simplest method to deploy Tech Research AI is using the provided multi-service `docker-compose.yml`.
 
 ### Architecture:
 - `db`: PostgreSQL 16 Alpine container with persistent named volume `postgres_data`.

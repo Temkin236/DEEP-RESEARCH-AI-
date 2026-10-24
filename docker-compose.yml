@@ -3,12 +3,12 @@ version: '3.8'
 services:
   db:
     image: postgres:16-alpine
-    container_name: deep_research_db
+    container_name: tech_research_db
     restart: always
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
-      POSTGRES_DB: ${POSTGRES_DB:-deep_research}
+      POSTGRES_DB: ${POSTGRES_DB:-tech_research}
     ports:
       - "5432:5432"
     volumes:
@@ -23,11 +23,11 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: deep_research_backend
+    container_name: tech_research_backend
     restart: always
     environment:
       - ENVIRONMENT=production
-      - DATABASE_URL=postgresql://postgres:postgres@db:5432/deep_research
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/tech_research
       - CHROMA_PERSIST_DIRECTORY=/app/data/chroma_db
       - GEMINI_API_KEY=${GEMINI_API_KEY}
       - OPENAI_API_KEY=${OPENAI_API_KEY}
@@ -47,7 +47,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: deep_research_frontend
+    container_name: tech_research_frontend
     restart: always
     ports:
       - "3000:80"

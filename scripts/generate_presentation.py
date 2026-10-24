@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Generate the Executive Showcase PowerPoint presentation for Deep Research AI.
+Generate the Executive Showcase PowerPoint presentation for Tech Research AI.
 Theme: Warm ivory, light cream, warm brown, and deep charcoal.
 """
 import os
@@ -29,7 +29,7 @@ def create_deck():
     slides_content = [
         {
             "num": "01",
-            "title": "Deep Research AI",
+            "title": "Tech Research AI",
             "subtitle": "Autonomous Multi-Agent Research Platform with Verified Citations",
             "bullets": [
                 "Full-Stack AI Architecture: LangGraph, FastAPI, ChromaDB, and React",
@@ -262,7 +262,7 @@ def create_deck():
             p.space_after = Pt(16)
 
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    output_path = os.path.join(base_dir, "docs", "Deep_Research_AI_Showcase.pptx")
+    output_path = os.path.join(base_dir, "docs", "Tech_Research_AI_Showcase.pptx")
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
     prs.save(output_path)
     print(f"Presentation saved successfully to {output_path}")

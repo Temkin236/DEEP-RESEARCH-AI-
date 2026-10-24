@@ -1,8 +1,8 @@
-# Security & Reliability Policy — Deep Research AI
+# Security & Reliability Policy — Tech Research AI
 
 ## 1. Threat Model & Defensive Controls
 
-Deep Research AI operates with untrusted external inputs from two critical attack vectors:
+Tech Research AI operates with untrusted external inputs from two critical attack vectors:
 1. **Live Web Content**: Content retrieved from arbitrary public URLs can contain malicious scripts, prompt injections, or malicious redirects.
 2. **User Document Uploads**: Uploaded files might attempt directory traversal, oversized memory denial of service, or embedded prompt instructions.
 

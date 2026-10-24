@@ -1,8 +1,8 @@
-# Testing & Quality Assurance Guide — Deep Research AI
+# Testing & Quality Assurance Guide — Tech Research AI
 
 ## Test Suite Overview
 
-Deep Research AI includes multi-layered automated testing across backend agent reasoning, citation validation, SSRF security, vector RAG retrieval, and frontend UI components.
+Tech Research AI includes multi-layered automated testing across backend agent reasoning, citation validation, SSRF security, vector RAG retrieval, and frontend UI components.
 
 ---
 

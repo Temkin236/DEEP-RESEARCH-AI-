@@ -1,4 +1,4 @@
-# Limitations and Ethical Boundary Disclosure — Deep Research AI
+# Limitations and Ethical Boundary Disclosure — Tech Research AI
 
 In accordance with responsible AI development standards, this document discloses known system boundaries, technical constraints, and operating limits.
 

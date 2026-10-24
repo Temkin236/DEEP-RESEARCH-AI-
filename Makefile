@@ -1,7 +1,7 @@
 .PHONY: help install dev test test-backend test-frontend build docker-up docker-down clean demo showcase
 
 help:
-	@echo "Deep Research AI - Developer Makefile"
+	@echo "Tech Research AI - Developer Makefile"
 	@echo "  make install        - Install backend and frontend dependencies"
 	@echo "  make dev            - Run backend and frontend concurrently"
 	@echo "  make dev-backend    - Run FastAPI backend development server"
@@ -45,7 +45,7 @@ demo:
 
 showcase:
 	cd backend && .venv/bin/python ../scripts/generate_presentation.py
-	@echo "Showcase presentation generated at docs/Deep_Research_AI_Showcase.pptx"
+	@echo "Showcase presentation generated at docs/Tech_Research_AI_Showcase.pptx"
 	@echo "Review showcase documentation at docs/SHOWCASE.md"
 
 build:

@@ -1,8 +1,8 @@
-# Final Showcase & Portfolio Guide — Deep Research AI
+# Final Showcase & Portfolio Guide — Tech Research AI
 
 ## 1. Project Portfolio Summary
 
-**Title**: Deep Research AI — Autonomous Multi-Agent Research Platform  
+**Title**: Tech Research AI — Autonomous Multi-Agent Research Platform  
 **Role**: Full-Stack AI Engineer & Systems Architect  
 **Core Technologies**: LangGraph, FastAPI, Python 3.12, React 18, Vite, TypeScript, Tailwind CSS, PostgreSQL, SQLAlchemy, Alembic, ChromaDB, Docker.
 
@@ -13,7 +13,7 @@ Standard LLM chat applications suffer from three critical flaws when handling co
 3. **Black-Box Progress**: Long-running research tasks leave users with uninformative spinning loaders and no visibility into discovered evidence.
 
 ### Solution & Engineering Architecture:
-Deep Research AI resolves these failures through a **stateful multi-agent system** orchestrated via LangGraph:
+Tech Research AI resolves these failures through a **stateful multi-agent system** orchestrated via LangGraph:
 - **5 Specialized Autonomous Agents**: Planner / Coordinator, Researcher, Analyst, Verification Agent, and Report Writer.
 - **Shared Evidence Registry**: Ingests, normalizes, and indexes live web results and uploaded documents into an authoritative evidence database.
 - **Strict Citation Validation**: A deterministic citation engine matches every report claim to registry excerpts, stripping hallucinated citation markers before user presentation.
@@ -26,7 +26,7 @@ Deep Research AI resolves these failures through a **stateful multi-agent system
 
 ### Act 1: The Research Dilemma & Application Launch (0:00 - 1:30)
 - **Action**: Open `http://localhost:3000` to the Landing Page.
-- **Spoken Narration**: *"Welcome to Deep Research AI. Today, enterprise research requires synthesizing dozens of technical sources without falling prey to hallucinations or fabricated links. Deep Research AI replaces single-prompt chatbots with an orchestrated multi-agent pipeline."*
+- **Spoken Narration**: *"Welcome to Tech Research AI. Today, enterprise research requires synthesizing dozens of technical sources without falling prey to hallucinations or fabricated links. Tech Research AI replaces single-prompt chatbots with an orchestrated multi-agent pipeline."*
 - **Visual Highlight**: Scroll through the 5-stage workflow diagram (`Plan → Research → Analyze → Verify → Report`) and the light-brown, ivory executive design system.
 
 ### Act 2: Initializing an Investigation (1:30 - 3:00)
@@ -46,7 +46,7 @@ Deep Research AI resolves these failures through a **stateful multi-agent system
 
 ### Act 5: Document Library, Testing & Security Architecture (6:45 - 8:00)
 - **Action**: Navigate to Document Library (`/documents`), show drag-and-drop indexing in ChromaDB, and mention the 18 passing backend pytest tests and 3 vitest suites.
-- **Closing**: *"Deep Research AI proves that by decoupling research planning, evidence collection, and verification into discrete agents with strict validation boundaries, autonomous AI can produce grounded, enterprise-grade research."*
+- **Closing**: *"Tech Research AI proves that by decoupling research planning, evidence collection, and verification into discrete agents with strict validation boundaries, autonomous AI can produce grounded, enterprise-grade research."*
 
 ---
 

@@ -1,6 +1,6 @@
-# Deep Research AI — Autonomous Multi-Agent Research Platform
+# Tech Research AI — Autonomous Multi-Agent Research Platform
 
-[![CI Pipeline](https://github.com/temkin/deep-research-ai/actions/workflows/ci.yml/badge.svg)](https://github.com/temkin/deep-research-ai/actions)
+[![CI Pipeline](https://github.com/Temkin236/DEEP-RESEARCH-AI-/actions/workflows/ci.yml/badge.svg)](https://github.com/Temkin236/DEEP-RESEARCH-AI-/actions)
 [![Python Version](https://img.shields.io/badge/python-3.12%20%7C%203.14-blue.svg)](https://python.org)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688.svg)](https://fastapi.tiangolo.com)
 [![LangGraph](https://img.shields.io/badge/LangGraph-0.2.20-orange.svg)](https://github.com/langchain-ai/langgraph)
@@ -8,7 +8,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.5-3178C6.svg)](https://typescriptlang.org)
 [![ChromaDB](https://img.shields.io/badge/ChromaDB-VectorStore-red.svg)](https://www.trychroma.com)
 
-> **Deep Research AI** is an autonomous multi-agent research platform that investigates inquiries, retrieves empirical evidence from web searches and user documents, verifies facts against an evidence registry, and synthesizes structured reports with authentic, grounded citations.
+> **Tech Research AI** is an autonomous multi-agent research platform that investigates inquiries, retrieves empirical evidence from web searches and user documents, verifies facts against an evidence registry, and synthesizes structured reports with authentic, grounded citations.
 
 ---
 
@@ -39,7 +39,7 @@ Standard conversational AI assistants suffer from three pervasive limitations:
 2. **Monolithic Prompting**: Single prompts cannot simultaneously plan, query search engines, evaluate evidence, and audit claims.
 3. **Black-Box Execution**: Users are presented with spinning loaders with zero real-time visibility into the research pipeline.
 
-**Deep Research AI** resolves these issues by decomposing research into an explicit, stateful **LangGraph StateGraph** executed across 5 specialized autonomous agents.
+**Tech Research AI** resolves these issues by decomposing research into an explicit, stateful **LangGraph StateGraph** executed across 5 specialized autonomous agents.
 
 ---
 
@@ -144,8 +144,8 @@ User Query Submitted
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/temkin/deep-research-ai.git
-cd deep-research-ai
+git clone https://github.com/Temkin236/DEEP-RESEARCH-AI-.git
+cd DEEP-RESEARCH-AI-
 ```
 
 ### 2. Set Up Backend
@@ -211,7 +211,7 @@ TAVILY_API_KEY=
 SERPER_API_KEY=
 
 # Database Configuration (SQLite default; PostgreSQL supported)
-DATABASE_URL=sqlite:///./deep_research.db
+DATABASE_URL=sqlite:///./tech_research.db
 
 # Chroma Persistence
 CHROMA_PERSIST_DIRECTORY=./chroma_db
@@ -315,7 +315,7 @@ Comprehensive guides located in `docs/`:
 - [`docs/TROUBLESHOOTING.md`](docs/TROUBLESHOOTING.md): Common error recovery and configuration fixes.
 - [`docs/LIMITATIONS.md`](docs/LIMITATIONS.md): Transparent ethical and technical boundary disclosures.
 - [`docs/SHOWCASE.md`](docs/SHOWCASE.md): Demonstration script, portfolio summary, and 15+ technical interview Q&As.
-- [`docs/Deep_Research_AI_Showcase.pptx`](docs/Deep_Research_AI_Showcase.pptx): 15-slide Executive PowerPoint presentation deck.
+- [`docs/Tech_Research_AI_Showcase.pptx`](docs/Tech_Research_AI_Showcase.pptx): 15-slide Executive PowerPoint presentation deck.
 
 ---
 
@@ -327,7 +327,7 @@ Comprehensive guides located in `docs/`:
 | **Week 6 → RAG Assistant** | **Complete** (`/api/v1/documents`, `frontend/src/pages/DocumentsPage.tsx`) | Document parsing (PDF, DOCX, TXT, MD), semantic chunking with 200-char overlap, ChromaDB local vector embeddings, similarity search, ground research in uploaded files. |
 | **Week 9 → Research Agent** | **Complete** (`backend/app/workflows/graph.py`, 5 specialized agents) | 5-agent LangGraph state machine (Planner, Researcher, Analyst, Verifier, Reporter), deterministic evidence registry, citation validation with `[n]` bracket keys, zero-hallucination auditing. |
 | **Week 11 → Production Agent** | **Complete** (`render.yaml`, `railway.json`, `docker-compose.yml`, `backend/Dockerfile`) | Cloud deployment ready on Render & Railway, multi-service Docker Compose (PostgreSQL, ChromaDB, FastAPI, Nginx React), Alembic migrations, healthcheck telemetry (`/api/v1/health`), SSRF security filtering. |
-| **Week 13 → Final Showcase** | **Complete** (`docs/SHOWCASE.md`, `scripts/generate_presentation.py`, `scripts/demo_showcase.py`) | Executive clean light-brown UI design system, 15-slide PowerPoint deck (`docs/Deep_Research_AI_Showcase.pptx`), 5-8 minute demo script, 15+ technical interview Q&As, 100% test pass rate. |
+| **Week 13 → Final Showcase** | **Complete** (`docs/SHOWCASE.md`, `scripts/generate_presentation.py`, `scripts/demo_showcase.py`) | Executive clean light-brown UI design system, 15-slide PowerPoint deck (`docs/Tech_Research_AI_Showcase.pptx`), 5-8 minute demo script, 15+ technical interview Q&As, 100% test pass rate. |
 
 ### Technical Prerequisites & Stack Mapping
 - **Python 3 + Virtualenv**: Installed & verified (`backend/.venv` running Python 3.14/3.12).

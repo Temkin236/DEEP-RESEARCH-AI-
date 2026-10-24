@@ -1,4 +1,4 @@
-# Troubleshooting Guide — Deep Research AI
+# Troubleshooting Guide — Tech Research AI
 
 ## Common Issues and Resolutions
 
@@ -35,7 +35,7 @@
 - **Resolution**: Pass the scanned document through an OCR utility (e.g. `tesseract` or Adobe OCR) to add an embedded text layer before uploading.
 
 ### 5. Database Locked or Permission Errors with SQLite
-- **Cause**: Multiple processes writing concurrently to `deep_research.db` without `check_same_thread=False`.
+- **Cause**: Multiple processes writing concurrently to `tech_research.db` without `check_same_thread=False`.
 - **Resolution**:
   - In `backend/app/database/session.py`, `check_same_thread=False` is enabled by default.
-  - For production multi-worker environments, configure PostgreSQL by setting `DATABASE_URL=postgresql://user:password@localhost:5432/deep_research`.
+  - For production multi-worker environments, configure PostgreSQL by setting `DATABASE_URL=postgresql://user:password@localhost:5432/tech_research`.

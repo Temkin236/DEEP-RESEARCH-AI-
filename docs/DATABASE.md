@@ -1,8 +1,8 @@
-# Database Schema & Migrations — Deep Research AI
+# Database Schema & Migrations — Tech Research AI
 
 ## Database Architecture
 
-Deep Research AI supports both SQLite (default for instant zero-configuration local development) and PostgreSQL (for production containerized deployments).
+Tech Research AI supports both SQLite (default for instant zero-configuration local development) and PostgreSQL (for production containerized deployments).
 Migrations are managed using **Alembic**.
 
 ```

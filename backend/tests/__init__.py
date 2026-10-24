@@ -1,3 +1,3 @@
 """
-Backend test suite for Deep Research AI
+Backend test suite for Tech Research AI
 """
